@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mate_op/animations/astronaut.dart';
-import 'package:mate_op/animations/rocket.dart';
+import 'package:mate_op/animations/astronaut/astronaut.dart';
+import 'package:mate_op/animations/rockets/rocket_a.dart';
+import 'package:mate_op/constants/enums.dart';
 
 class Home extends StatelessWidget {
-  final String images_uri = "assets/images";
+  final String imagesUri = "assets/images";
 
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: 24.0),
       child: Stack(
@@ -28,8 +30,8 @@ class Home extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: <Widget>[
-                      Image.asset("$images_uri/moon_asset.png"),
-                      Image.asset("$images_uri/play_icon.png"),
+                      Image.asset("$imagesUri/moon_asset.png"),
+                      Image.asset("$imagesUri/play_icon.png"),
                     ],
                   ),
                 ),
@@ -45,18 +47,33 @@ class Home extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.only(top: 16.0, left: 24.0),
-              child: Image.asset("$images_uri/cup_icon.png"),
+              child: Image.asset("$imagesUri/cup_icon.png"),
             ),
           ),
           Align(
             alignment: Alignment.topRight,
             child: Padding(
               padding: const EdgeInsets.only(top: 16.0, right: 24.0),
-              child: Image.asset("$images_uri/cog_icon.png"),
+              child: Image.asset("$imagesUri/cog_icon.png"),
             ),
           ),
-          AstronautAnim(),
-          RocketAnim(),
+          RocketAAnim(
+              screenSize: screenSize,
+              duration: Duration(seconds: 2),
+              size: Size(50, 162),
+              margin: Size(90, 55),
+              angle: 42,
+              positionOffset: Size(-8, 8),
+              alignment: AnimAlignment.topLeft),
+          AstronautAnim(
+            screenSize: screenSize,
+            size: Size(212.0, 150.0),
+            margin: Size(10, 10),
+            angle: -31.0,
+            positionOffset: Size(2, 7),
+            alignment: AnimAlignment.centerRight,
+            duration: Duration(seconds: 3),
+          ),
         ],
       ),
     );
