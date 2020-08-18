@@ -5,8 +5,13 @@ enum AnimAlignment {
   topCenter,
   topRight,
   centerLeft,
+  center,
   centerRight,
   bottomLeft,
   bottomCenter,
   bottomRight,
+}
+enum AnimType {
+  parent,
+  standalone,
 }

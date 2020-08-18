@@ -10,8 +10,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(top: 24.0),
+    return SafeArea(
       child: Stack(
         children: <Widget>[
           Center(

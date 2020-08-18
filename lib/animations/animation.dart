@@ -91,8 +91,8 @@ class _MateOpAnim extends State<MateOpAnim>
       case AnimAlignment.topCenter:
         top = verticalMargins[1];
         bottom = verticalMargins[0];
-        right = horizontalMargins[2];
-        left = horizontalMargins[2];
+        right = horizontalMargins[2] + widget.margin.width;
+        left = horizontalMargins[2] - widget.margin.width;
         break;
       case AnimAlignment.topRight:
         top = verticalMargins[1];
@@ -101,14 +101,20 @@ class _MateOpAnim extends State<MateOpAnim>
         left = horizontalMargins[0];
         break;
       case AnimAlignment.centerLeft:
-        bottom = verticalMargins[2];
-        top = verticalMargins[2];
+        bottom = verticalMargins[2] - widget.margin.height;
+        top = verticalMargins[2] + widget.margin.height;
         left = horizontalMargins[1];
         right = horizontalMargins[0];
         break;
+      case AnimAlignment.center:
+        bottom = verticalMargins[2] - widget.margin.height;
+        top = verticalMargins[2] + widget.margin.height;
+        left = horizontalMargins[2] - widget.margin.width;
+        right = horizontalMargins[2] + widget.margin.width;
+        break;
       case AnimAlignment.centerRight:
-        top = verticalMargins[2];
-        bottom = verticalMargins[2];
+        top = verticalMargins[2] + widget.margin.height;
+        bottom = verticalMargins[2] - widget.margin.height;
         right = horizontalMargins[1];
         left = horizontalMargins[0];
         break;
@@ -121,8 +127,8 @@ class _MateOpAnim extends State<MateOpAnim>
       case AnimAlignment.bottomCenter:
         bottom = verticalMargins[1];
         top = verticalMargins[0];
-        right = horizontalMargins[2];
-        left = horizontalMargins[2];
+        right = horizontalMargins[2] + widget.margin.width;
+        left = horizontalMargins[2] - widget.margin.width;
         break;
       case AnimAlignment.bottomRight:
         bottom = verticalMargins[1];

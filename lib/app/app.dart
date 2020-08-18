@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mate_op/screens/containers/main_container.dart';
+import 'package:mate_op/screens/containers/playground.dart';
 
 class GameApp extends StatelessWidget {
   @override
@@ -13,7 +13,7 @@ class GameApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: MainContainer(),
+      home: PlayGround(),
     );
   }
 }

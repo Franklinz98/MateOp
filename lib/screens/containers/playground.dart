@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mate_op/screens/views/home.dart';
 import 'package:mate_op/screens/views/game_zone.dart';
 
-class MainContainer extends StatefulWidget {
+class PlayGround extends StatefulWidget {
   @override
-  MainContainerState createState() => MainContainerState();
+  _PlayGroundState createState() => _PlayGroundState();
 }
 
-class MainContainerState extends State<MainContainer> {
+class _PlayGroundState extends State<PlayGround> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
           Image.asset(
-            "assets/images/background_a.png",
+            "assets/images/background_b.png",
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          Home(),
+          GameZone(),
         ],
       ),
     );
