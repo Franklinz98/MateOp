@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mate_op/screens/views/game_zone.dart';
+import 'package:mate_op/screens/views/ranking.dart';
+import 'package:mate_op/screens/views/results.dart';
 
 class PlayGround extends StatefulWidget {
   @override
@@ -18,7 +20,7 @@ class _PlayGroundState extends State<PlayGround> {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          GameZone(),
+          MateOpRanking(),
         ],
       ),
     );

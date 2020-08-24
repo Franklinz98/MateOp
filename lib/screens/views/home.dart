@@ -13,6 +13,23 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Stack(
         children: <Widget>[
+          RocketAAnim(
+              screenSize: screenSize,
+              duration: Duration(seconds: 2),
+              size: Size(50, 162),
+              margin: Size(90, 55),
+              angle: 42,
+              positionOffset: Size(-8, 8),
+              alignment: AnimAlignment.topLeft),
+          AstronautAnim(
+            screenSize: screenSize,
+            size: Size(212.0, 150.0),
+            margin: Size(10, 10),
+            angle: -31.0,
+            positionOffset: Size(2, 7),
+            alignment: AnimAlignment.centerRight,
+            duration: Duration(seconds: 3),
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -55,23 +72,6 @@ class Home extends StatelessWidget {
               padding: const EdgeInsets.only(top: 16.0, right: 24.0),
               child: Image.asset("$imagesUri/cog_icon.png"),
             ),
-          ),
-          RocketAAnim(
-              screenSize: screenSize,
-              duration: Duration(seconds: 2),
-              size: Size(50, 162),
-              margin: Size(90, 55),
-              angle: 42,
-              positionOffset: Size(-8, 8),
-              alignment: AnimAlignment.topLeft),
-          AstronautAnim(
-            screenSize: screenSize,
-            size: Size(212.0, 150.0),
-            margin: Size(10, 10),
-            angle: -31.0,
-            positionOffset: Size(2, 7),
-            alignment: AnimAlignment.centerRight,
-            duration: Duration(seconds: 3),
           ),
         ],
       ),

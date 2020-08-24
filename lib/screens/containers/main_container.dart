@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mate_op/screens/views/home.dart';
-import 'package:mate_op/screens/views/game_zone.dart';
+import 'package:mate_op/screens/views/login.dart';
 
 class MainContainer extends StatefulWidget {
   @override
@@ -19,7 +18,7 @@ class MainContainerState extends State<MainContainer> {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          Home(),
+          Login(),
         ],
       ),
     );

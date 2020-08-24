@@ -19,6 +19,81 @@ class _GameZoneState extends State<GameZone> {
     return SafeArea(
       child: Stack(
         children: [
+          BlueShadesPlanetAnim(
+            screenSize: screenSize,
+            size: Size(130, 130),
+            margin: Size(80, -35),
+            angle: 0,
+            positionOffset: Size(0, 5),
+            alignment: AnimAlignment.centerLeft,
+            duration: Duration(seconds: 2),
+            type: AnimType.parent,
+            child: Text(
+              "10",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunito(
+                fontSize: 38,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: Offset(0.00, 3.00),
+                    color: Color(0xff000000).withOpacity(0.54),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          PinkPlanetAnim(
+            screenSize: screenSize,
+            size: Size(130, 130),
+            margin: Size(0, -35),
+            angle: 0,
+            positionOffset: Size(0, -5),
+            alignment: AnimAlignment.center,
+            duration: Duration(seconds: 2),
+            type: AnimType.parent,
+            child: Text(
+              "9",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunito(
+                fontSize: 38,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: Offset(0.00, 3.00),
+                    color: Color(0xff000000).withOpacity(0.54),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          OrangePlanetAnim(
+            screenSize: screenSize,
+            size: Size(130, 130),
+            margin: Size(80, -35),
+            angle: 0,
+            positionOffset: Size(0, 5),
+            alignment: AnimAlignment.centerRight,
+            duration: Duration(seconds: 2),
+            type: AnimType.parent,
+            child: Text(
+              "?",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunito(
+                fontSize: 38,
+                color: Colors.white,
+                shadows: [
+                  Shadow(
+                    offset: Offset(0.00, 3.00),
+                    color: Color(0xff000000).withOpacity(0.54),
+                    blurRadius: 6,
+                  ),
+                ],
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 70.0),
             child: Column(
@@ -136,11 +211,11 @@ class _GameZoneState extends State<GameZone> {
                         75.0,
                       ),
                       child: Text(
-                        "No\nsé",
+                        "X",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
-                          fontSize: 16,
+                          fontSize: 26,
                           color: Color(0xff001e7e),
                           shadows: [
                             Shadow(
@@ -158,81 +233,6 @@ class _GameZoneState extends State<GameZone> {
                   height: 24.0,
                 ),
               ],
-            ),
-          ),
-          BlueShadesPlanetAnim(
-            screenSize: screenSize,
-            size: Size(130, 130),
-            margin: Size(80, -35),
-            angle: 0,
-            positionOffset: Size(0, 5),
-            alignment: AnimAlignment.centerLeft,
-            duration: Duration(seconds: 2),
-            type: AnimType.parent,
-            child: Text(
-              "10",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunito(
-                fontSize: 38,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    offset: Offset(0.00, 3.00),
-                    color: Color(0xff000000).withOpacity(0.54),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          PinkPlanetAnim(
-            screenSize: screenSize,
-            size: Size(130, 130),
-            margin: Size(0, -35),
-            angle: 0,
-            positionOffset: Size(0, -5),
-            alignment: AnimAlignment.center,
-            duration: Duration(seconds: 2),
-            type: AnimType.parent,
-            child: Text(
-              "9",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunito(
-                fontSize: 38,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    offset: Offset(0.00, 3.00),
-                    color: Color(0xff000000).withOpacity(0.54),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          OrangePlanetAnim(
-            screenSize: screenSize,
-            size: Size(130, 130),
-            margin: Size(80, -35),
-            angle: 0,
-            positionOffset: Size(0, 5),
-            alignment: AnimAlignment.centerRight,
-            duration: Duration(seconds: 2),
-            type: AnimType.parent,
-            child: Text(
-              "?",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.nunito(
-                fontSize: 38,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    offset: Offset(0.00, 3.00),
-                    color: Color(0xff000000).withOpacity(0.54),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
             ),
           ),
         ],
