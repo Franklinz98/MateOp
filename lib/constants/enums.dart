@@ -15,3 +15,9 @@ enum AnimType {
   parent,
   standalone,
 }
+enum OperationType {
+  addition,
+  subtraction,
+  multiplication,
+  division,
+}

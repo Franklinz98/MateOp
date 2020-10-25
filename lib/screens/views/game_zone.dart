@@ -136,7 +136,7 @@ class _GameZoneState extends State<GameZone> {
                     ],
                   ),
                 ),
-                Row(
+                /* Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     MoonPlanet(
@@ -228,7 +228,7 @@ class _GameZoneState extends State<GameZone> {
                       ),
                     ),
                   ],
-                ),
+                ), */
                 SizedBox(
                   height: 24.0,
                 ),

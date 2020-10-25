@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mate_op/screens/views/home.dart';
 import 'package:mate_op/screens/views/login.dart';
 
 class MainContainer extends StatefulWidget {
@@ -7,6 +8,8 @@ class MainContainer extends StatefulWidget {
 }
 
 class MainContainerState extends State<MainContainer> {
+  Widget _content = Home();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +21,7 @@ class MainContainerState extends State<MainContainer> {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          Login(),
+          _content,
         ],
       ),
     );

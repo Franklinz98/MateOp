@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_op/animations/astronaut/astronaut.dart';
@@ -13,22 +15,29 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Stack(
         children: <Widget>[
-          RocketAAnim(
-              screenSize: screenSize,
-              duration: Duration(seconds: 2),
-              size: Size(50, 162),
-              margin: Size(90, 55),
-              angle: 42,
-              positionOffset: Size(-8, 8),
-              alignment: AnimAlignment.topLeft),
-          AstronautAnim(
-            screenSize: screenSize,
-            size: Size(212.0, 150.0),
-            margin: Size(10, 10),
-            angle: -31.0,
-            positionOffset: Size(2, 7),
-            alignment: AnimAlignment.centerRight,
-            duration: Duration(seconds: 3),
+          Positioned(
+            left: 90,
+            top: 55,
+            child: Transform.rotate(
+              angle: 42 * pi / 180.0,
+              child: Image.asset(
+                "assets/images/rocket_asset.png",
+                height: 162,
+                width: 50,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 55,
+            top: 90,
+            child: Transform.rotate(
+              angle: 31 * pi / 180.0,
+              child: Image.asset(
+                "assets/images/astronaut_asset.png",
+                height: 150,
+                width: 212,
+              ),
+            ),
           ),
           Center(
             child: Column(

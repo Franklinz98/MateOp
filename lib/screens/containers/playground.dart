@@ -20,7 +20,7 @@ class _PlayGroundState extends State<PlayGround> {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          MateOpRanking(),
+          SessionResults(),
         ],
       ),
     );
