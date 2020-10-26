@@ -21,3 +21,7 @@ enum OperationType {
   multiplication,
   division,
 }
+enum AuthScreen{
+  login,
+  recover,
+}

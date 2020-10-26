@@ -5,8 +5,34 @@ import 'package:mate_op/animations/rockets/rocket_a.dart';
 import 'package:mate_op/constants/colors.dart';
 import 'package:mate_op/constants/enums.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  final Function screenSwitch;
+
+  const Login({Key key, @required this.screenSwitch}) : super(key: key);
+
+  @override
+  _WidgetState createState() => _WidgetState();
+}
+
+class _WidgetState extends State<Login> {
   final String imagesUri = "assets/images";
+  GlobalKey<FormState> formKey;
+  TextEditingController email, password;
+  Function _validator;
+
+  @override
+  void initState() {
+    super.initState();
+    formKey = GlobalKey();
+    email = TextEditingController();
+    password = TextEditingController();
+    _validator = (value) {
+      if (value.isEmpty) {
+        return 'Por favor llene el campo';
+      }
+      return null;
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,99 +58,133 @@ class Login extends StatelessWidget {
             duration: Duration(seconds: 3),
           ),
           Center(
-            child: Container(
-              height: 300.00,
-              width: 374.00,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(17.00),
-              ),
-              padding: EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text(
-                    "Inicia",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 32,
-                      color: GameColors.meteorite,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 16.0,
-                  ),
-                  Row(
-                    children: [
+            child: SingleChildScrollView(
+              child: Container(
+                height: 300.00,
+                width: 374.00,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(17.00),
+                ),
+                padding: EdgeInsets.all(12.0),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        "Inicia",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 32,
+                          color: GameColors.meteorite,
+                        ),
+                      ),
                       SizedBox(
-                        width: 65.0,
+                        height: 16.0,
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 65.0,
+                            child: Text(
+                              "Correo",
+                              style: GoogleFonts.nunito(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 18,
+                                color: GameColors.vivid_violet,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 38.00,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.00),
+                              ),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                                validator: _validator,
+                                controller: email,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.nunito(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 18,
+                                  color: GameColors.vivid_violet,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 12.0,
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 65.0,
+                            child: Text(
+                              "Clave",
+                              style: GoogleFonts.nunito(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 18,
+                                color: GameColors.vivid_violet,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 38.00,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.00),
+                              ),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                ),
+                                obscureText: true,
+                                validator: _validator,
+                                controller: password,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.nunito(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 18,
+                                  color: GameColors.vivid_violet,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: GestureDetector(
+                            child: Image.asset("$imagesUri/login_button.png"),
+                            onTap: () {},
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
                         child: Text(
-                          "Correo",
+                          "¿Olvidaste tu contraseña?",
+                          textAlign: TextAlign.center,
                           style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 18,
+                            fontSize: 20,
                             color: GameColors.vivid_violet,
                           ),
                         ),
+                        onTap: widget.screenSwitch,
                       ),
-                      Expanded(
-                        child: Container(
-                          height: 38.00,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.00),
-                          ),
-                        ),
-                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 65.0,
-                        child: Text(
-                          "Clave",
-                          style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 18,
-                            color: GameColors.vivid_violet,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 38.00,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.00),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: GestureDetector(
-                        child: Image.asset("$imagesUri/login_button.png"),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    child: Text(
-                      "¿Olvidaste tu contraseña?",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.nunito(
-                        fontSize: 20,
-                        color: GameColors.vivid_violet,
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
           ),
