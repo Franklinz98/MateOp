@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mate_op/screens/containers/main_container.dart';
-import 'package:mate_op/screens/containers/playground.dart';
+import 'package:mate_op/screens/routes/authentication.dart';
+import 'package:mate_op/screens/routes/main_container.dart';
 
 class GameApp extends StatelessWidget {
   @override
@@ -14,7 +14,7 @@ class GameApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: MainContainer(),
+      home: Authentication(),
     );
   }
 }

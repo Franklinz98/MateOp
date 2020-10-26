@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mate_op/screens/views/home.dart';
 import 'package:mate_op/screens/views/login.dart';
+import 'package:mate_op/screens/views/recover_pass.dart';
 
-class MainContainer extends StatefulWidget {
+class Authentication extends StatefulWidget {
   @override
-  MainContainerState createState() => MainContainerState();
+  _WidgetRoute createState() => _WidgetRoute();
 }
 
-class MainContainerState extends State<MainContainer> {
-  Widget _content = Home();
-
+class _WidgetRoute extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +19,7 @@ class MainContainerState extends State<MainContainer> {
             width: MediaQuery.of(context).size.width,
             fit: BoxFit.cover,
           ),
-          _content,
+          RecoverPassword(),
         ],
       ),
     );

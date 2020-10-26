@@ -1,4 +1,4 @@
-package com.example.mate_op
+package co.edu.uninorte.mateop
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -5,7 +5,7 @@ import 'package:mate_op/animations/rockets/rocket_a.dart';
 import 'package:mate_op/constants/colors.dart';
 import 'package:mate_op/constants/enums.dart';
 
-class Login extends StatelessWidget {
+class RecoverPassword extends StatelessWidget {
   final String imagesUri = "assets/images";
 
   @override
@@ -33,7 +33,7 @@ class Login extends StatelessWidget {
           ),
           Center(
             child: Container(
-              height: 300.00,
+              height: 240.00,
               width: 374.00,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
@@ -44,7 +44,7 @@ class Login extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Text(
-                    "Inicia",
+                    "Recupera contraseña",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w700,
@@ -79,33 +79,6 @@ class Login extends StatelessWidget {
                       )
                     ],
                   ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 65.0,
-                        child: Text(
-                          "Clave",
-                          style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 18,
-                            color: GameColors.vivid_violet,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 38.00,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.00),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
                   Expanded(
                     child: Center(
                       child: GestureDetector(
@@ -116,7 +89,7 @@ class Login extends StatelessWidget {
                   ),
                   GestureDetector(
                     child: Text(
-                      "¿Olvidaste tu contraseña?",
+                      "Entrar en mi cuenta",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.nunito(
                         fontSize: 20,
