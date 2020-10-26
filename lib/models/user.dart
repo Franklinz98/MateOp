@@ -4,14 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 class MOUser {
   User firebaseUser;
   int age, schoolType, gender, grade, session;
-  bool hasPerformanceData;
+  String course;
+  Map performanceJson;
+  double score, winRate;
 
   MOUser(
       {@required this.age,
       @required this.schoolType,
       @required this.gender,
       @required this.grade,
-      @required this.hasPerformanceData,
+      @required this.performanceJson,
       this.firebaseUser,
       this.session});
 
@@ -27,6 +29,16 @@ class MOUser {
         'schoolType': schoolType,
         'gender': gender,
         'grade': grade,
+        'performance': performanceJson,
+        'score': score,
+        'winRate': winRate,
+        'session': session
+      };
+
+  Map<String, dynamic> get updateJson => {
+        'score': score,
+        'winRate': winRate,
+        'performance': performanceJson,
         'session': session
       };
 
@@ -36,7 +48,7 @@ class MOUser {
         schoolType: map['schoolType'],
         gender: map['gender'],
         grade: map['grade'],
-        hasPerformanceData: map['hasPerformanceData'],
+        performanceJson: map['performance'],
         session: map['session']);
   }
 }

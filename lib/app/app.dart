@@ -14,7 +14,7 @@ class GameApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: Authentication(),
+      home: MainContainer(),
     );
   }
 }

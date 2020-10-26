@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_op/animations/astronaut/astronaut.dart';
 import 'package:mate_op/animations/rockets/rocket_a.dart';
+import 'package:mate_op/backend/firebase/authentication.dart';
+import 'package:mate_op/backend/firebase/data.dart';
 import 'package:mate_op/constants/colors.dart';
 import 'package:mate_op/constants/enums.dart';
 
@@ -167,7 +169,14 @@ class _WidgetState extends State<Login> {
                         child: Center(
                           child: GestureDetector(
                             child: Image.asset("$imagesUri/login_button.png"),
-                            onTap: () {},
+                            onTap: () {
+                              if (formKey.currentState.validate()) {
+                                signIn(email.text, password.text)
+                                    .then((user) {
+                                      Navigator.of(context).pop(user);
+                                    });
+                              }
+                            },
                           ),
                         ),
                       ),

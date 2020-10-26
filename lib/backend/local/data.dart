@@ -10,3 +10,14 @@ Future<String> get localPath async {
 File getLocalFile(String path, String filename) {
   return File('$path/$filename.json');
 }
+
+// Write session file method
+Future<File> writeSessionFile(){
+  
+}
+
+// Read session file method
+
+// Write user performance json
+
+// Read user performance json

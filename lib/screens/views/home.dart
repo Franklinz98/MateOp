@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_op/animations/astronaut/astronaut.dart';
 import 'package:mate_op/animations/rockets/rocket_a.dart';
+import 'package:mate_op/backend/firebase/authentication.dart';
 import 'package:mate_op/constants/enums.dart';
+import 'package:mate_op/screens/routes/authentication.dart';
 
 class Home extends StatelessWidget {
   final String imagesUri = "assets/images";
@@ -59,6 +62,17 @@ class Home extends StatelessWidget {
                       Image.asset("$imagesUri/play_icon.png"),
                     ],
                   ),
+                  onTap: () {
+                    User user = currentUser();
+                    if (user == null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Authentication()),
+                      );
+                    } else {
+                      signOut();
+                    }
+                  },
                 ),
                 Text(
                   "Juguemos...",

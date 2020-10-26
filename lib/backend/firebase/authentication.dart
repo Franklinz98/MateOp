@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mate_op/backend/firebase_data.dart';
+import 'package:mate_op/backend/firebase/data.dart';
 import 'package:mate_op/models/user.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;

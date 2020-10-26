@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mate_op/backend/data.dart';
+import 'package:mate_op/backend/local/data.dart';
 import 'package:mate_op/models/exercise.dart';
 
 class PerformanceVectors {
