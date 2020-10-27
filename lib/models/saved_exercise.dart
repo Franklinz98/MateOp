@@ -1,4 +1,4 @@
-import 'package:mate_op/models/exercise.dart';
+import 'exercise.dart';
 
 class SavedExercise {
   final String intensity;
@@ -14,7 +14,7 @@ class SavedExercise {
       };
 
   factory SavedExercise.fromJson(Map<String, dynamic> json) {
-    return SavedExercise(json["intensity"], json["dificulty"],
-        Exercise.fromJson(json["exercise"]));
+    return SavedExercise(json['intensity'], json['dificulty'],
+        Exercise.fromJson(json['exercise']));
   }
 }

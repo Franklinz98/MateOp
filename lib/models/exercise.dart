@@ -1,3 +1,4 @@
+
 import 'package:mate_op/constants/enums.dart';
 
 class Exercise {
@@ -8,7 +9,6 @@ class Exercise {
   int hesitations;
   int dificulty;
   int loID;
-  int type;
   OperationType operation;
   Duration duration;
 
@@ -17,25 +17,36 @@ class Exercise {
       this.secondOperator,
       this.answer,
       this.playerAnswer,
+      this.hesitations,
+      this.dificulty,
       this.loID,
-      this.type});
+      this.operation,
+      duration}) {
+    this.duration = duration ?? Duration();
+  }
 
   Map<String, dynamic> toJson() => {
         'firstOperator': firstOperator,
         'secondOperator': secondOperator,
         'answer': answer,
         'player_answer': playerAnswer,
+        'hesitations': hesitations,
+        'dificulty': dificulty,
         'loID': loID,
-        'type': type
+        'type': operation.index,
+        'duration': duration.inMilliseconds
       };
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     return Exercise(
-        firstOperator: json["firstOperator"],
-        secondOperator: json["secondOperator"],
-        answer: json["answer"],
-        playerAnswer: json["player_answer"],
-        loID: json["loID"],
-        type: json["type"]);
+        firstOperator: json['firstOperator'],
+        secondOperator: json['secondOperator'],
+        answer: json['answer'],
+        playerAnswer: json['player_answer'],
+        hesitations: json['hesitations'],
+        dificulty: json['hesitations'],
+        loID: json['loID'],
+        operation: OperationType.values[json['type']],
+        duration: Duration(milliseconds: json['duration']));
   }
 }
