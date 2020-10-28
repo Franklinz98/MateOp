@@ -54,11 +54,11 @@ Future<void> updatePerformanceData(
 
 Future<bool> setTimes() {
   Map map = {
-    '1':0,
-    '2':0,
-    '3':0,
-    '4':0,
-    '5':0,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
   };
   List<Map> los = [];
   los.add(map);
@@ -66,12 +66,32 @@ Future<bool> setTimes() {
   los.add(map);
   los.add(map);
   los.add(map);
-  _firestore.collection('time_data').doc('0').set({
-    'data':los,
-    'metadata':los
-  });
-  _firestore.collection('time_data').doc('1').set({
-    'data':los,
-    'metadata':los
-  });
+  _firestore
+      .collection('time_data')
+      .doc('0')
+      .set({'data': los, 'metadata': los});
+  _firestore
+      .collection('time_data')
+      .doc('1')
+      .set({'data': los, 'metadata': los});
+}
+
+Future<Map> getAverageTimes(int schoolType) async {
+  try {
+    DocumentSnapshot timesData = await _firestore
+        .collection('time_data')
+        .doc(schoolType.toString())
+        .get();
+    return timesData.data();
+  } catch (e) {
+    return null;
+  }
+}
+
+Future<void> setAverageTimes(Map map, int schoolType) async {
+  try {
+    _firestore.collection('time_data').doc(schoolType.toString()).set(map);
+  } catch (e) {
+    print('error');
+  }
 }

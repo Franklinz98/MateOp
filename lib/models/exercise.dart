@@ -1,4 +1,3 @@
-
 import 'package:mate_op/constants/enums.dart';
 
 class Exercise {
@@ -23,6 +22,10 @@ class Exercise {
       this.operation,
       duration}) {
     this.duration = duration ?? Duration();
+  }
+
+  bool checkAnswer() {
+    return this.answer == this.playerAnswer;
   }
 
   Map<String, dynamic> toJson() => {
