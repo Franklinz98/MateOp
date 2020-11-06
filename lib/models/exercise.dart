@@ -10,6 +10,7 @@ class Exercise {
   int loID;
   OperationType operation;
   Duration duration;
+  List answerOptions;
 
   Exercise(
       {this.firstOperator,
@@ -24,9 +25,8 @@ class Exercise {
     this.duration = duration ?? Duration();
   }
 
-  bool checkAnswer() {
-    return this.answer == this.playerAnswer;
-  }
+  String get firstOpInt => firstOperator.toInt().toString();
+  String get secondOpInt => secondOperator.toInt().toString();
 
   Map<String, dynamic> toJson() => {
         'firstOperator': firstOperator,
@@ -47,9 +47,13 @@ class Exercise {
         answer: json['answer'],
         playerAnswer: json['player_answer'],
         hesitations: json['hesitations'],
-        dificulty: json['hesitations'],
+        dificulty: json['dificulty'],
         loID: json['loID'],
         operation: OperationType.values[json['type']],
         duration: Duration(milliseconds: json['duration']));
+  }
+
+  bool checkAnswer() {
+    return this.answer == this.playerAnswer;
   }
 }

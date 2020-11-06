@@ -10,6 +10,7 @@ const String baseUrl = 'mate-op.herokuapp.com';
 
 // Calculate next intensity level with the bayesian model
 Future<Intensity> getNextIntensityLevel(Map map) async {
+  map = PerformanceVectors.firebaseToJson(map);
   var uri = Uri.https(baseUrl, 'nextIntensity');
   final response = await http.post(
     uri,

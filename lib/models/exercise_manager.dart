@@ -4,7 +4,7 @@ import 'dart:io';
 import 'exercise.dart';
 
 class ExerciseManager {
-  List<Exercise> allExercises;
+  List allExercises;
   int currentExercise;
   Duration finalTime;
 
@@ -28,18 +28,7 @@ class ExerciseManager {
     return allExercises[currentExercise];
   }
 
-  double getPorcentGoodAnswers() {
-    double den = allExercises.length.toDouble();
-    den = (getGoodAnswers() / den);
-    return (den * 100).roundToDouble() / 100;
-  }
-
-  int getStarsCount() {
-    int stars = getGoodAnswers() ~/ 5;
-    return stars;
-  }
-
-  int getGoodAnswers() {
+  int _getGoodAnswers() {
     int number;
     number = 0;
     allExercises.forEach((exercise) {
@@ -50,23 +39,20 @@ class ExerciseManager {
     return number;
   }
 
-  int getSessionScore() {
-    double score = 0;
-    allExercises.forEach((exercise) {
-      score += exerciseScore(exercise);
-    });
-    score *= 150;
-    return score.round();
-  }
-
-  double exerciseScore(Exercise exercise) {
-    if (exercise.checkAnswer()) {
-      double time = (1 / exercise.duration.inSeconds) * 0.4;
-      double hesitation = (1 / (exercise.hesitations + 1)) * 0.6;
-      return time + hesitation;
-    } else {
-      return 0;
-    }
+  List getResults() {
+    int goodAnswers = _getGoodAnswers();
+    int totalAnswers = allExercises.length;
+    int stars = goodAnswers ~/ 5;
+    double winRatio = goodAnswers / totalAnswers;
+    winRatio = (winRatio * 100).roundToDouble() / 100;
+    return [
+      goodAnswers,
+      totalAnswers,
+      stars,
+      winRatio,
+      _getSessionScore(),
+      finalTime
+    ];
   }
 
   Map<String, dynamic> toJson() {
@@ -88,10 +74,33 @@ class ExerciseManager {
       exercises.add(Exercise.fromJson(exerciseJson));
     });
     return ExerciseManager(
-      allExercises: map['allExercises'],
+      allExercises: exercises,
       currentExercise: map['currentExercise'],
-      finalTime: map['finalTime'],
+      finalTime: Duration(milliseconds: map['finalTime']),
     );
+  }
+  int _getSessionScore() {
+    double score = 0;
+    allExercises.forEach((exercise) {
+      double exScore = exerciseScore(exercise);
+      score += exScore;
+    });
+    score *= 150;
+    return score.round();
+  }
+
+  double exerciseScore(Exercise exercise) {
+    if (exercise.checkAnswer()) {
+      double time = (1 / exercise.duration.inSeconds) * 0.4;
+      if (exercise.hesitations == -1) {
+        print('object');
+      }
+      int exHesitation = exercise.hesitations == -1 ? 0 : exercise.hesitations;
+      double hesitation = (1 / (exHesitation + 1)) * 0.6;
+      return time + hesitation;
+    } else {
+      return 0;
+    }
   }
 
   double getAverageTimePerLO(int lo) {

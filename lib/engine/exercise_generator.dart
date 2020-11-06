@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:mate_op/backend/local/data.dart';
 import 'package:mate_op/constants/enums.dart';
 
-import '../backend/local/data.dart';
 import '../models/exercise.dart';
 import '../models/saved_exercise.dart';
 import '../models/intensities.dart';
@@ -30,8 +30,8 @@ List<Exercise> generateRandomExercise(
   return myExercises;
 }
 
-Future<List<Exercise>> generateExercisesFromLOPerformance(
-    Intensity myPerformance, int numberOfExercises) async {
+List<Exercise> generateExercisesFromLOPerformance(
+    Intensity myPerformance, int numberOfExercises, String path) {
   List<Exercise> myExercises = List<Exercise>();
 
   int chosenLO = 0;
@@ -73,22 +73,20 @@ Future<List<Exercise>> generateExercisesFromLOPerformance(
       }
     }
 
-    List<Exercise> myExerciseslo = await _generateExercisesPerLO(
-        numberOfDF, "LOIN$i", 0, OperationType.addition);
+    List<Exercise> myExerciseslo = _generateExercisesPerLO(
+        numberOfDF, "LOIN$i", 0, OperationType.addition, path, myExercises);
     for (Exercise ex in myExerciseslo) {
       myExercises.add(ex);
     }
-    myExerciseslo = await _generateExercisesPerLO(
-        numberOfDD, "LOIN$i", 1, OperationType.addition);
+    myExerciseslo = _generateExercisesPerLO(
+        numberOfDD, "LOIN$i", 1, OperationType.addition, path, myExercises);
     for (Exercise ex in myExerciseslo) {
       myExercises.add(ex);
     }
   }
-  String path = await localPath;
   String filename = "WrongExercises";
   io.File file = getLocalFile(path, filename);
   if (file.existsSync()) {
-    print("delete");
     file.deleteSync();
   }
   return myExercises;
@@ -107,13 +105,18 @@ bool _canBeAddedToList(List<int> list, int newNum, int comparator) {
   return true;
 }
 
-Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
-    String loIDString, int dificulty, OperationType opType) async {
+List<Exercise> _generateExercisesPerLO(
+    int numberExerc,
+    String loIDString,
+    int dificulty,
+    OperationType opType,
+    String path,
+    List<Exercise> currentList) {
   List<Exercise> myExercises = List<Exercise>();
   List<int> choosenNumbersSum1 = List<int>();
   List<int> choosenNumbersSum2 = List<int>();
   myExercises =
-      await _getPastExercisesFromFile(numberExerc, loIDString, dificulty);
+      _getPastExercisesFromFile(numberExerc, loIDString, dificulty, path);
   numberExerc = numberExerc - myExercises.length;
   for (var i = 0; i < numberExerc; i++) {
     int loId = 0;
@@ -127,7 +130,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 < 10 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       } else {
         do {
           sumOp1 = _random.nextInt(10) + 1;
@@ -135,7 +138,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while ((sumOp1 + sumOp2) >= 10 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       }
     } else if (loIDString == "LOIN1") {
       loId = 1;
@@ -160,7 +163,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 >= 100 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       } else {
         do {
           sumOp1 = _random.nextInt(100) + 10;
@@ -168,7 +171,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 >= 100 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       }
     } else if (loIDString == "LOIN3") {
       loId = 3;
@@ -179,7 +182,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 < 100 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       } else {
         do {
           sumOp1 = _random.nextInt(100) + 10;
@@ -187,7 +190,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 < 100 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       }
     } else {
       loId = 4;
@@ -198,7 +201,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 < 100 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       } else {
         do {
           sumOp1 = _random.nextInt(100) + 10;
@@ -206,7 +209,7 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
         } while (sumOp1 + sumOp2 >= 100 ||
             !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
             !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, sumOp1, sumOp2));
+            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
       }
     }
     choosenNumbersSum1.add(sumOp1);
@@ -220,15 +223,15 @@ Future<List<Exercise>> _generateExercisesPerLO(int numberExerc,
       operation: opType,
     );
     oneExc.dificulty = dificulty;
+    print('${oneExc.firstOperator} + ${oneExc.secondOperator}');
     myExercises.add(oneExc);
   }
   return myExercises;
 }
 
-Future<List<Exercise>> _getPastExercisesFromFile(
-    int numberExerc, String loIDString, int dificulty) async {
+List<Exercise> _getPastExercisesFromFile(
+    int numberExerc, String loIDString, int dificulty, String path) {
   List<Exercise> myExercises = List<Exercise>();
-  String path = await localPath;
   String filename = "WrongExercises";
   io.File file = getLocalFile(path, filename);
   try {
@@ -256,8 +259,7 @@ Future<List<Exercise>> _getPastExercisesFromFile(
   return myExercises;
 }
 
-writeOnFIleWrongExercise(Exercise myWrongExercise) async {
-  String path = await localPath;
+void writeOnFIleWrongExercise(Exercise myWrongExercise, String path) {
   String filename = "WrongExercises";
   io.File file = getLocalFile(path, filename);
   int dificulty = myWrongExercise.dificulty;
@@ -276,8 +278,14 @@ writeOnFIleWrongExercise(Exercise myWrongExercise) async {
   }
 }
 
-bool _canExerciseBeAdded(List<Exercise> currents, int a, int b) {
+bool _canExerciseBeAdded(
+    List<Exercise> currents, List<Exercise> currentList, int a, int b) {
   for (Exercise exercise in currents) {
+    if (exercise.firstOperator == a && exercise.secondOperator == b) {
+      return false;
+    }
+  }
+  for (Exercise exercise in currentList) {
     if (exercise.firstOperator == a && exercise.secondOperator == b) {
       return false;
     }

@@ -21,6 +21,12 @@ Future<MOUser> signIn(email, password) async {
   return user;
 }
 
+Future<MOUser> getUserObject(User firebaseUser) async {
+  MOUser user = MOUser.fromJson(await getUserMetadata(firebaseUser.uid));
+  user.firebaseUser = firebaseUser;
+  return user;
+}
+
 Future<bool> recover(email) async {
   try {
     await _auth.sendPasswordResetEmail(email: email);

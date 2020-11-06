@@ -1,21 +1,53 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_op/animations/planets/blue_shades.dart';
+import 'package:mate_op/backend/local/data.dart';
 import 'package:mate_op/components/moon.dart';
 import 'package:mate_op/animations/planets/orange.dart';
 import 'package:mate_op/animations/planets/pink.dart';
+import 'package:mate_op/components/timer_bar.dart';
 import 'package:mate_op/constants/enums.dart';
+import 'package:mate_op/engine/exercise_generator.dart';
+import 'package:mate_op/models/exercise.dart';
+import 'package:mate_op/provider/mateop_state.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class GameZone extends StatefulWidget {
+  final Function nextExercise;
+  final MateOpState state;
+
+  const GameZone({Key key, @required this.state, @required this.nextExercise})
+      : super(key: key);
+
   @override
   _GameZoneState createState() => _GameZoneState();
 }
 
 class _GameZoneState extends State<GameZone> {
+  Exercise exercise;
+  String firstOp, secondOp;
+  Duration duration;
+  TimerBar timerBar;
+  double op1, op2, op3, playerAnswer;
+  int hesitation;
+
+  @override
+  void initState() {
+    super.initState();
+    hesitation = -1;
+    playerAnswer = double.minPositive;
+    duration = Duration();
+    timerBar = TimerBar(durationUpdate: (Duration increment) {
+      duration += increment;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    showExercise();
     return SafeArea(
       child: Stack(
         children: [
@@ -29,9 +61,10 @@ class _GameZoneState extends State<GameZone> {
             duration: Duration(seconds: 2),
             type: AnimType.parent,
             child: Text(
-              "10",
+              firstOp,
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
+                fontWeight: FontWeight.w600,
                 fontSize: 38,
                 color: Colors.white,
                 shadows: [
@@ -54,9 +87,10 @@ class _GameZoneState extends State<GameZone> {
             duration: Duration(seconds: 2),
             type: AnimType.parent,
             child: Text(
-              "9",
+              secondOp,
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
+                fontWeight: FontWeight.w600,
                 fontSize: 38,
                 color: Colors.white,
                 shadows: [
@@ -83,6 +117,7 @@ class _GameZoneState extends State<GameZone> {
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
                 fontSize: 38,
+                fontWeight: FontWeight.w600,
                 color: Colors.white,
                 shadows: [
                   Shadow(
@@ -101,12 +136,7 @@ class _GameZoneState extends State<GameZone> {
                 SizedBox(
                   height: 12.0,
                 ),
-                LinearPercentIndicator(
-                  backgroundColor: Colors.white.withOpacity(0.50),
-                  progressColor: Colors.white,
-                  percent: 0.8,
-                  lineHeight: 6.0,
-                ),
+                timerBar,
                 SizedBox(
                   height: 24.0,
                 ),
@@ -136,7 +166,7 @@ class _GameZoneState extends State<GameZone> {
                     ],
                   ),
                 ),
-                /* Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     MoonPlanet(
@@ -145,7 +175,7 @@ class _GameZoneState extends State<GameZone> {
                         75.0,
                       ),
                       child: Text(
-                        "9",
+                        op1.toInt().toString(),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
@@ -160,6 +190,7 @@ class _GameZoneState extends State<GameZone> {
                           ],
                         ),
                       ),
+                      onTap: () => selectOption(op1),
                     ),
                     MoonPlanet(
                       size: Size(
@@ -167,7 +198,7 @@ class _GameZoneState extends State<GameZone> {
                         75.0,
                       ),
                       child: Text(
-                        "19",
+                        op2.toInt().toString(),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
@@ -182,6 +213,7 @@ class _GameZoneState extends State<GameZone> {
                           ],
                         ),
                       ),
+                      onTap: () => selectOption(op2),
                     ),
                     MoonPlanet(
                       size: Size(
@@ -189,7 +221,7 @@ class _GameZoneState extends State<GameZone> {
                         75.0,
                       ),
                       child: Text(
-                        "12",
+                        op3.toInt().toString(),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w600,
@@ -204,6 +236,7 @@ class _GameZoneState extends State<GameZone> {
                           ],
                         ),
                       ),
+                      onTap: () => selectOption(op3),
                     ),
                     MoonPlanet(
                       size: Size(
@@ -226,17 +259,73 @@ class _GameZoneState extends State<GameZone> {
                           ],
                         ),
                       ),
+                      onTap: () => selectOption(-double.minPositive),
                     ),
                   ],
-                ), */
+                ),
                 SizedBox(
-                  height: 24.0,
+                  height: 42.0,
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: MoonPlanet(
+              size: Size(
+                90.0,
+                90.0,
+              ),
+              child: Icon(
+                Icons.check_outlined,
+                color: Color(0xff001e7e),
+                size: 35.0,
+              ),
+              onTap: () {
+                if (playerAnswer != double.minPositive) {
+                  timerBar.stopTicker();
+                  print(duration.inSeconds);
+                  setState(() {
+                    widget.nextExercise
+                        .call(playerAnswer, duration, hesitation);
+                    hesitation = -1;
+                    playerAnswer = double.minPositive;
+                    duration = Duration();
+                    timerBar.startTicker();
+                  });
+                }
+              },
             ),
           ),
         ],
       ),
     );
+  }
+
+  void restartTicker() {
+    timerBar.stopTicker();
+    timerBar.startTicker();
+  }
+
+  void showExercise() {
+    exercise = widget.state.exerciseManager.getCurrentExercise();
+    print('Exercise: ${widget.state.exerciseManager.currentExercise}');
+    exercise.answerOptions = generateAnswerOptions(exercise.answer);
+    writeSessionFile(widget.state.localPath, widget.state.exerciseManager,
+        widget.state.userId);
+    firstOp = exercise.firstOpInt;
+    secondOp = exercise.secondOpInt;
+    op1 = exercise.answerOptions[0];
+    op2 = exercise.answerOptions[1];
+    op3 = exercise.answerOptions[2];
+  }
+
+  void selectOption(double value) {
+    if (playerAnswer != value) {
+      playerAnswer = value;
+      hesitation++;
+      print(playerAnswer);
+      print(hesitation);
+    }
   }
 }

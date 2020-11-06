@@ -1,10 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'dart:io';
-
-
-import 'package:mate_op/backend/local/data.dart';
-
-import 'exercise.dart';
 
 class PerformanceVectors {
   List learningObjectives;
@@ -54,8 +50,7 @@ class PerformanceVectors {
     jsonIntensities = {};
   }
 
-  void updatePerformanceVectorsSet(
-      List<Exercise> exercises, int grado, int sesion) {
+  void updatePerformanceVectorsSet(List exercises, int grado, int sesion) {
     learningObjectives = List(exercises.length);
     tiempos = List(exercises.length);
     correcto = List(exercises.length);
@@ -65,9 +60,6 @@ class PerformanceVectors {
     this.sesion = sesion;
     var i = 0;
     exercises.forEach((exercise) {
-      if (exercise.duration == null) {
-        print(null);
-      }
       learningObjectives[i] = exercise.loID;
       tiempos[i] = exercise.duration.inSeconds;
       dificultad[i] = exercise.dificulty;
@@ -82,8 +74,8 @@ class PerformanceVectors {
     });
   }
 
-  void setBinLoPerformanceVectors(List binLO0, List binLO1,
-      List binLO2, List binLO3, List binLO4) {
+  void setBinLoPerformanceVectors(
+      List binLO0, List binLO1, List binLO2, List binLO3, List binLO4) {
     this.binLO0 = binLO0;
     this.binLO1 = binLO1;
     this.binLO2 = binLO2;
@@ -95,8 +87,8 @@ class PerformanceVectors {
     this.binPer = binPer;
   }
 
-  void setMulLoformanceVectors(List mulLO0, List mulLO1,
-      List mulLO2, List mulLO3, List mulLO4) {
+  void setMulLoformanceVectors(
+      List mulLO0, List mulLO1, List mulLO2, List mulLO3, List mulLO4) {
     this.mulLO0 = mulLO0;
     this.mulLO1 = mulLO1;
     this.mulLO2 = mulLO2;
@@ -112,7 +104,7 @@ class PerformanceVectors {
     this.jsonIntensities = intensities;
   }
 
-  Map get toJson {
+  Map<String, dynamic> toJson() {
     return {
       'LO': learningObjectives,
       'grado': grado,
@@ -139,9 +131,36 @@ class PerformanceVectors {
     };
   }
 
+  Map<String, dynamic> toFirebaseJson() {
+    return {
+      'LO': learningObjectives,
+      'grado': grado,
+      'sesion': sesion,
+      'tipoEscuela': tipoEscuela,
+      'tiempos': tiempos,
+      'correcto': correcto,
+      'titubeo': titubeo,
+      'dificultad': dificultad,
+      'binLO0': json.encode(binLO0),
+      'binLO1': json.encode(binLO1),
+      'binLO2': json.encode(binLO2),
+      'binLO3': json.encode(binLO3),
+      'binLO4': json.encode(binLO4),
+      'binPer': json.encode(binPer),
+      'mulLO0': json.encode(mulLO0),
+      'mulLO1': json.encode(mulLO1),
+      'mulLO2': json.encode(mulLO2),
+      'mulLO3': json.encode(mulLO3),
+      'mulLO4': json.encode(mulLO4),
+      'mulPer': json.encode(mulPer),
+      'Intensities': jsonIntensities,
+      'numLO': 5,
+    };
+  }
+
   void writeObjectInFile(String path) {
     File('$path/PerformanceVectors.json')
-        .writeAsStringSync(json.encode(toJson));
+        .writeAsStringSync(json.encode(toJson()));
   }
 
   factory PerformanceVectors.fromJson(Map performanceVectorMap) {
@@ -173,6 +192,34 @@ class PerformanceVectors {
     return myPerformanceVector;
   }
 
+  static Map<String, dynamic> firebaseToJson(Map performanceVectorMap) {
+    performanceVectorMap['binLO0'] =
+        json.decode(performanceVectorMap['binLO0']);
+    performanceVectorMap['binLO1'] =
+        json.decode(performanceVectorMap['binLO1']);
+    performanceVectorMap['binLO2'] =
+        json.decode(performanceVectorMap['binLO2']);
+    performanceVectorMap['binLO3'] =
+        json.decode(performanceVectorMap['binLO3']);
+    performanceVectorMap['binLO4'] =
+        json.decode(performanceVectorMap['binLO4']);
+    performanceVectorMap['binPer'] =
+        json.decode(performanceVectorMap['binPer']);
+    performanceVectorMap['mulLO0'] =
+        json.decode(performanceVectorMap['mulLO0']);
+    performanceVectorMap['mulLO1'] =
+        json.decode(performanceVectorMap['mulLO1']);
+    performanceVectorMap['mulLO2'] =
+        json.decode(performanceVectorMap['mulLO2']);
+    performanceVectorMap['mulLO3'] =
+        json.decode(performanceVectorMap['mulLO3']);
+    performanceVectorMap['mulLO4'] =
+        json.decode(performanceVectorMap['mulLO4']);
+    performanceVectorMap['mulPer'] =
+        json.decode(performanceVectorMap['mulPer']);
+    return performanceVectorMap;
+  }
+
   factory PerformanceVectors.readObjectFromFile(String path) {
     var file = File('$path/PerformanceVectors.json');
     if (file.existsSync()) {
@@ -186,9 +233,8 @@ class PerformanceVectors {
     }
   }
 
-  static void writeJsonInFile(Map map) {
-    File('$localPath/PerformanceVectors.json')
-        .writeAsStringSync(json.encode(map));
+  static void writeJsonInFile(String path, Map map) {
+    File('$path/PerformanceVectors.json').writeAsStringSync(json.encode(map));
   }
 
   dynamic getIntensitiesOfJson(Map performanceVectorsMap) {

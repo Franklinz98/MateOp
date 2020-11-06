@@ -44,12 +44,16 @@ Future<Map> getPerformanceData(MOUser user) async {
 // Post performance data
 Future<void> updatePerformanceData(
     MOUser user, Map performanceVectorsData) async {
-  await _firestore
-      .collection('data')
-      .doc('performance')
-      .collection(user.firebaseUser.uid)
-      .doc('session${user.session}')
-      .set(performanceVectorsData);
+  try {
+    DocumentReference performanceRef = _firestore
+        .collection('data')
+        .doc('performance')
+        .collection(user.firebaseUser.uid)
+        .doc('session${user.session}');
+    performanceRef.set(performanceVectorsData);
+  } catch (e) {
+    print(e.toString());
+  }
 }
 
 Future<bool> setTimes() {

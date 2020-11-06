@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mate_op/provider/mateop_state.dart';
 import 'package:mate_op/screens/routes/authentication.dart';
 import 'package:mate_op/screens/routes/main_container.dart';
+import 'package:provider/provider.dart';
 
 class GameApp extends StatelessWidget {
   @override
@@ -14,7 +16,10 @@ class GameApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
       ),
-      home: MainContainer(),
+      home: ChangeNotifierProvider<MateOpState>(
+        create: (context) => MateOpState(),
+        child: MainContainer(),
+      ),
     );
   }
 }

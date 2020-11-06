@@ -7,14 +7,19 @@ import 'package:mate_op/animations/planets/pink.dart';
 import 'package:mate_op/animations/rockets/rocket_a.dart';
 import 'package:mate_op/components/moon.dart';
 import 'package:mate_op/constants/enums.dart';
+import 'package:mate_op/provider/mateop_state.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class SessionResults extends StatelessWidget {
-  final stars = 2;
+  List results;
+
+  SessionResults({Key key, @required this.results}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    int stars = results[2];
+    Duration time = results[5];
     return SafeArea(
       child: Stack(
         children: [
@@ -50,7 +55,7 @@ class SessionResults extends StatelessWidget {
                         100.0,
                       ),
                       child: Image.asset(
-                        stars >= 2
+                        stars >= 1
                             ? "assets/images/star.png"
                             : "assets/images/star_placeholder.png",
                       ),
@@ -61,7 +66,7 @@ class SessionResults extends StatelessWidget {
                         100.0,
                       ),
                       child: Image.asset(
-                        stars >= 1
+                        stars >= 2
                             ? "assets/images/star.png"
                             : "assets/images/star_placeholder.png",
                       ),
@@ -80,7 +85,7 @@ class SessionResults extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "12 preguntas correctas de 15",
+                  "${results[0]} preguntas correctas de ${results[1]}",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.nunito(
                     fontWeight: FontWeight.w600,
@@ -108,7 +113,7 @@ class SessionResults extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "80",
+                            results[4].toString(),
                             textAlign: TextAlign.center,
                             style: GoogleFonts.nunito(
                               fontWeight: FontWeight.w700,
@@ -133,7 +138,7 @@ class SessionResults extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "01:08",
+                            "${time.inMinutes.toString().padLeft(2, '0')}:${(time.inSeconds % 60).toString().padLeft(2, '0')}",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.nunito(
                               fontWeight: FontWeight.w700,
@@ -150,7 +155,9 @@ class SessionResults extends StatelessWidget {
                   height: 16.0,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                   child: Image.asset("assets/images/results_button.png"),
                 ),
                 SizedBox(

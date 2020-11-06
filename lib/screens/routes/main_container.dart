@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mate_op/backend/local/data.dart';
+import 'package:mate_op/provider/mateop_state.dart';
 import 'package:mate_op/screens/views/home.dart';
-import 'package:mate_op/screens/views/login.dart';
+import 'package:mate_op/screens/views/results.dart';
+import 'package:provider/provider.dart';
 
 class MainContainer extends StatefulWidget {
   @override
@@ -9,12 +12,16 @@ class MainContainer extends StatefulWidget {
 }
 
 class MainContainerState extends State<MainContainer> {
-  Widget _content = Home();
+  Widget _content;
 
-@override
+  @override
   void initState() {
     super.initState();
     Firebase.initializeApp();
+    initPath();
+    _content = Home(
+      state: Provider.of<MateOpState>(context, listen: false),
+    );
   }
 
   @override
@@ -32,5 +39,10 @@ class MainContainerState extends State<MainContainer> {
         ],
       ),
     );
+  }
+
+  void initPath() async {
+    Provider.of<MateOpState>(context, listen: false)
+        .updatePath(await localPath);
   }
 }

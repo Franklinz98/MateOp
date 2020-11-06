@@ -3,17 +3,31 @@ import 'package:mate_op/backend/local/data.dart';
 import 'package:mate_op/models/exercise_manager.dart';
 import 'package:mate_op/models/performance_vectors.dart';
 import 'package:mate_op/models/user.dart';
+import 'package:mate_op/provider/mateop_state.dart';
 
-void updateFileWithVectorPerformace(
-    ExerciseManager exerciseManager, MOUser user) async {
+void updateFileWithVectorPerformace(MateOpState state) {
+  ExerciseManager exerciseManager = state.exerciseManager;
+  MOUser user = state.user;
   PerformanceVectors performanceVectors =
-      PerformanceVectors.readObjectFromFile(await localPath);
+      PerformanceVectors.readObjectFromFile(state.localPath);
   performanceVectors.updatePerformanceVectorsSet(
       exerciseManager.allExercises, user.grade, user.session);
-  performanceVectors.writeObjectInFile(await localPath);
-  await updatePerformanceData(user, performanceVectors.toJson);
-  await deleteSessionFile(user);
-  updateAverageTimes(exerciseManager, user);
+  performanceVectors.writeObjectInFile(state.localPath);
+  try {
+    print(performanceVectors.toJson().runtimeType);
+    updatePerformanceData(user, performanceVectors.toFirebaseJson());
+    // clearSessionFile(user);
+    deleteSessionFile(state.localPath, state.userId);
+    updateAverageTimes(exerciseManager, user);
+    List results = exerciseManager.getResults();
+    user.updateWinRate(results[3]);
+    user.score += results[4];
+    user.stars += results[2];
+    user.performanceJson = true;
+    updateUserMetadata(user);
+  } catch (e) {
+    print(e.toString());
+  }
 }
 
 void updateAverageTimes(ExerciseManager exerciseManager, MOUser user) async {
