@@ -158,6 +158,19 @@ class PerformanceVectors {
     };
   }
 
+  List userRecord() {
+    List list = List();
+    for (var i = 0; i < 15; i++) {
+      list.add({
+        'lo': learningObjectives[i],
+        'difficulty': dificultad[i],
+        'time': tiempos[i],
+        'result': correcto[i],
+      });
+    }
+    return list;
+  }
+
   void writeObjectInFile(String path) {
     File('$path/PerformanceVectors.json')
         .writeAsStringSync(json.encode(toJson()));

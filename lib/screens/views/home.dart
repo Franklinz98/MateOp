@@ -62,7 +62,9 @@ class Home extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Hola User!",
+                  this.state.user != null
+                      ? "Hola ${this.state.user.firebaseUser.displayName}!"
+                      : "Hola User!",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w700,
@@ -78,18 +80,16 @@ class Home extends StatelessWidget {
                     ],
                   ),
                   onTap: () async {
-                    MOUser user;
                     User firebaseUser = currentUser();
                     if (firebaseUser == null) {
+                      MOUser user;
                       user = await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => Authentication()),
                       );
-                    } else {
-                      user = await getUserObject(firebaseUser);
+                      state.setUser(user);
                     }
-                    state.setUser(user);
                     startSession(context);
                   },
                 ),
@@ -103,9 +103,14 @@ class Home extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, left: 24.0),
-              child: Image.asset("$imagesUri/cup_icon.png"),
+            child: GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0, left: 24.0),
+                child: Image.asset("$imagesUri/cup_icon.png"),
+              ),
+              onTap: () {
+                this.state.setMainScreenLoud(MainScreen.ranking);
+              },
             ),
           ),
           Align(
@@ -117,7 +122,7 @@ class Home extends StatelessWidget {
               ),
               onTap: () {
                 // setTimes();
-                signOut();
+                signOut().then((value) => this.state.setUser(null));
               },
             ),
           ),
@@ -126,7 +131,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  void startSession(BuildContext context) async {
+  Future<void> startSession(BuildContext context) async {
     if (getLocalFile(state.localPath, 'session_file_${state.userId}')
         .existsSync()) {
       state.updateExerciseManager(
@@ -171,6 +176,7 @@ class Home extends StatelessWidget {
   }
 
   void openGameZone(BuildContext context, MateOpState state) {
+    print('nueva Ruta');
     Navigator.push(
       context,
       MaterialPageRoute(

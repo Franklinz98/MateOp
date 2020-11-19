@@ -24,6 +24,7 @@ void updateFileWithVectorPerformace(MateOpState state) {
     user.score += results[4];
     user.stars += results[2];
     user.performanceJson = true;
+    user.registries = performanceVectors.userRecord();
     updateUserMetadata(user);
   } catch (e) {
     print(e.toString());

@@ -25,3 +25,10 @@ enum AuthScreen{
   login,
   recover,
 }
+
+enum MainScreen{
+  home,
+  ranking,
+  about,
+  // loading,
+}

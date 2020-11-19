@@ -6,12 +6,12 @@ import 'package:mate_op/models/performance_vectors.dart';
 import 'package:mate_op/models/user.dart';
 import 'package:http/http.dart' as http;
 
-const String baseUrl = 'mate-op.herokuapp.com';
+const String baseUrl = 'mateop.herokuapp.com';
 
 // Calculate next intensity level with the bayesian model
 Future<Intensity> getNextIntensityLevel(Map map) async {
   map = PerformanceVectors.firebaseToJson(map);
-  var uri = Uri.https(baseUrl, 'nextIntensity');
+  var uri = Uri.https(baseUrl, '/model/nextIntensity');
   final response = await http.post(
     uri,
     headers: <String, String>{
@@ -50,7 +50,7 @@ Future<Intensity> getNextIntensityLevel(Map map) async {
 
 // Calculate initial intensity level with the bayesian model using user metadata
 Future<Intensity> predictInicitalIntensity(MOUser user) async {
-  var uri = Uri.https(baseUrl, 'onNewPlayer');
+  var uri = Uri.https(baseUrl, '/model/predict');
   final response = await http.post(
     uri,
     headers: <String, String>{
@@ -63,5 +63,24 @@ Future<Intensity> predictInicitalIntensity(MOUser user) async {
     return intensity;
   } else {
     throw Exception('Error on request');
+  }
+}
+
+Future<List> getLeaderboard(String score) async {
+  var queryParameters = {
+    'score': score,
+  };
+  var uri = Uri.https(baseUrl, '/data/leaderboard', queryParameters);
+  final response = await http.get(
+    uri,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+  if (response.statusCode == 200) {
+    List leaderboard = json.decode(response.body);
+    return leaderboard;
+  } else {
+    return [];
   }
 }

@@ -7,6 +7,7 @@ class MOUser {
   String course;
   bool performanceJson;
   double score, winRate;
+  List registries;
 
   MOUser(
       {@required this.age,
@@ -53,6 +54,7 @@ class MOUser {
         'hasPerformanceData': performanceJson,
         'session': session,
         'stars': stars,
+        'record': registries
       };
 
   factory MOUser.fromJson(Map<String, dynamic> map) {
