@@ -1,4 +1,4 @@
-/* import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_op/animations/astronaut/astronaut.dart';
 import 'package:mate_op/backend/firebase/data.dart';
@@ -108,4 +108,3 @@ class LoadingScreen extends StatelessWidget {
     }
   }
 }
- */

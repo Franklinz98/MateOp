@@ -64,7 +64,7 @@ class Home extends StatelessWidget {
                 Text(
                   this.state.user != null
                       ? "Hola ${this.state.user.firebaseUser.displayName}!"
-                      : "Hola User!",
+                      : "Hola!",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w700,
@@ -90,7 +90,7 @@ class Home extends StatelessWidget {
                       );
                       state.setUser(user);
                     }
-                    startSession(context);
+                    state.setMainScreenLoud(MainScreen.loading);
                   },
                 ),
                 Text(
@@ -127,63 +127,6 @@ class Home extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Future<void> startSession(BuildContext context) async {
-    if (getLocalFile(state.localPath, 'session_file_${state.userId}')
-        .existsSync()) {
-      state.updateExerciseManager(
-          readSessionFile(state.localPath, state.userId));
-      openGameZone(context, state);
-    } else {
-      if (state.user.performanceJson) {
-        Map performanceData = await getPerformanceData(state.user);
-        Intensity intensity = await getNextIntensityLevel(performanceData);
-        List exercises =
-            generateExercisesFromLOPerformance(intensity, 15, state.localPath);
-        state.updateExerciseManager(ExerciseManager(
-            allExercises: exercises,
-            currentExercise: 0,
-            finalTime: Duration()));
-        openGameZone(context, state);
-      } else {
-        Intensity intensity = await predictInicitalIntensity(state.user);
-        List exercises =
-            generateExercisesFromLOPerformance(intensity, 15, state.localPath);
-        state.updateExerciseManager(ExerciseManager(
-          allExercises: exercises,
-          currentExercise: 0,
-          finalTime: Duration(),
-        ));
-        PerformanceVectors performanceVectors = PerformanceVectors();
-        // performanceVectors.jsonIntensities =
-        performanceVectors.grado = state.user.grade;
-        performanceVectors.sesion = state.user.session;
-        performanceVectors.tipoEscuela = state.user.schoolType;
-        performanceVectors.setBinperPerformanceVectors([
-          [1, 0],
-          [1, 0],
-          [1, 0],
-          [1, 0],
-          [1, 0]
-        ]);
-        performanceVectors.writeObjectInFile(state.localPath);
-        openGameZone(context, state);
-      }
-    }
-  }
-
-  void openGameZone(BuildContext context, MateOpState state) {
-    print('nueva Ruta');
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider<MateOpState>.value(
-          value: state,
-          child: PlayGround(),
-        ),
       ),
     );
   }
