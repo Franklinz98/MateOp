@@ -56,7 +56,8 @@ class MainContainerState extends State<MainContainer> {
     );
   }
 
-  /* void openGameZone(BuildContext context, MateOpState state) {
+  void openGameZone(BuildContext context, MateOpState state) {
+    print('nueva Ruta');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -66,7 +67,7 @@ class MainContainerState extends State<MainContainer> {
         ),
       ),
     );
-  } */
+  }
 
   void initPath() async {
     Provider.of<MateOpState>(context, listen: false)
@@ -83,14 +84,14 @@ class MainContainerState extends State<MainContainer> {
         break;
       case MainScreen.about:
         break;
-      /* default:
+      default:
         return LoadingScreen(
           state: _provider,
           openPlayground: () {
             _provider.setMainScreenLoud(MainScreen.home);
             openGameZone(context, _provider);
           },
-        ); */
+        );
     }
   }
 }

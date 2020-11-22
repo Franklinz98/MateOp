@@ -30,5 +30,5 @@ enum MainScreen{
   home,
   ranking,
   about,
-  // loading,
+  loading,
 }

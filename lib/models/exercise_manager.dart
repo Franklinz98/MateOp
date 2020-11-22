@@ -85,18 +85,21 @@ class ExerciseManager {
       double exScore = exerciseScore(exercise);
       score += exScore;
     });
-    score *= 150;
+    score *= 100;
     return score.round();
   }
 
   double exerciseScore(Exercise exercise) {
     if (exercise.checkAnswer()) {
-      double time = (1 / exercise.duration.inSeconds) * 0.4;
-      if (exercise.hesitations == -1) {
-        print('object');
+      double time = exercise.duration.inSeconds.toDouble();
+      if (exercise.dificulty == 0) {
+        time = time > 7 ? 7 / time : 1;
+      } else {
+        time = time > 15 ? 15 / time : 1;
       }
+      time = time * 0.5;
       int exHesitation = exercise.hesitations == -1 ? 0 : exercise.hesitations;
-      double hesitation = (1 / (exHesitation + 1)) * 0.6;
+      double hesitation = (1 / (exHesitation + 1)) * 0.5;
       return time + hesitation;
     } else {
       return 0;
