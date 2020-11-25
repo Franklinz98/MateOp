@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:mate_op/models/exercise.dart';
+import 'package:path/path.dart' as p;
+import 'package:mate_op/constants/enums.dart';
 
 class PerformanceVectors {
   List learningObjectives;
@@ -60,7 +62,7 @@ class PerformanceVectors {
     this.sesion = sesion;
     var i = 0;
     exercises.forEach((exercise) {
-      learningObjectives[i] = exercise.loID;
+      learningObjectives[i] = exercise.learningObj;
       tiempos[i] = exercise.duration.inSeconds;
       dificultad[i] = exercise.dificulty;
       titubeo[i] = exercise.hesitations;
@@ -171,8 +173,8 @@ class PerformanceVectors {
     return list;
   }
 
-  void writeObjectInFile(String path) {
-    File('$path/PerformanceVectors.json')
+  void writeObjectInFile(String path, OperationType operation) {
+    File('$path/PerformanceVectors_${p.extension(operation.toString()).replaceAll('.', '')}.json')
         .writeAsStringSync(json.encode(toJson()));
   }
 
@@ -233,8 +235,10 @@ class PerformanceVectors {
     return performanceVectorMap;
   }
 
-  factory PerformanceVectors.readObjectFromFile(String path) {
-    var file = File('$path/PerformanceVectors.json');
+  factory PerformanceVectors.readObjectFromFile(
+      String path, OperationType operation) {
+    var file = File(
+        '$path/PerformanceVectors_${p.extension(operation.toString()).replaceAll('.', '')}.json');
     if (file.existsSync()) {
       return PerformanceVectors.fromJson(
         json.decode(
@@ -246,8 +250,9 @@ class PerformanceVectors {
     }
   }
 
-  static void writeJsonInFile(String path, Map map) {
-    File('$path/PerformanceVectors.json').writeAsStringSync(json.encode(map));
+  static void writeJsonInFile(String path, Map map, OperationType operation) {
+    File('$path/PerformanceVectors_${p.extension(operation.toString()).replaceAll('.', '')}.json')
+        .writeAsStringSync(json.encode(map));
   }
 
   dynamic getIntensitiesOfJson(Map performanceVectorsMap) {

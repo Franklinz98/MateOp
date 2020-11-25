@@ -7,7 +7,7 @@ class Exercise {
   double playerAnswer;
   int hesitations;
   int dificulty;
-  int loID;
+  int learningObj;
   OperationType operation;
   Duration duration;
   List answerOptions;
@@ -19,7 +19,7 @@ class Exercise {
       this.playerAnswer,
       this.hesitations,
       this.dificulty,
-      this.loID,
+      this.learningObj,
       this.operation,
       duration}) {
     this.duration = duration ?? Duration();
@@ -35,7 +35,7 @@ class Exercise {
         'player_answer': playerAnswer,
         'hesitations': hesitations,
         'dificulty': dificulty,
-        'loID': loID,
+        'loID': learningObj,
         'type': operation.index,
         'duration': duration.inMilliseconds
       };
@@ -48,7 +48,7 @@ class Exercise {
         playerAnswer: json['player_answer'],
         hesitations: json['hesitations'],
         dificulty: json['dificulty'],
-        loID: json['loID'],
+        learningObj: json['loID'],
         operation: OperationType.values[json['type']],
         duration: Duration(milliseconds: json['duration']));
   }

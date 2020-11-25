@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mate_op/constants/enums.dart';
 
 class MOUser {
   User firebaseUser;
-  int age, schoolType, gender, grade, session, stars;
-  String course;
-  bool performanceJson;
+  int age, schoolType, gender, grade, stars, sessionAdd, sessionSubs;
+  String course, token;
   double score, winRate;
   List registries;
 
@@ -14,19 +14,43 @@ class MOUser {
       @required this.schoolType,
       @required this.gender,
       @required this.grade,
-      @required this.performanceJson,
+      this.sessionAdd,
+      this.sessionSubs,
       this.firebaseUser,
-      this.session,
       this.score,
       this.winRate,
-      this.stars});
+      this.stars,
+      this.token});
 
   void updateWinRate(double rate) {
+    int session = sessionAdd == -1 ? 0 : sessionAdd;
+    session += sessionSubs == -1 ? 0 : sessionSubs;
+    if (session == 0 && sessionAdd == sessionSubs) {
+      session++;
+    }
     winRate = (winRate * (session / (session + 1))) + (rate / (session + 1));
   }
 
   void updateScore(double newScore) {
-    score = score + (newScore / (session + 1));
+    score += newScore;
+  }
+
+  void increaseSession(OperationType operation) {
+    if (operation == OperationType.addition) {
+      sessionAdd++;
+    } else if (operation == OperationType.subtraction) {
+      sessionSubs++;
+    }
+  }
+
+  int getSession(OperationType operation) {
+    if (operation == OperationType.addition) {
+      return sessionAdd;
+    } else if (operation == OperationType.subtraction) {
+      return sessionSubs;
+    } else {
+      return sessionAdd + sessionSubs;
+    }
   }
 
   Map<String, dynamic> toJsonPrediction() => {
@@ -41,18 +65,18 @@ class MOUser {
         'schoolType': schoolType,
         'gender': gender,
         'grade': grade,
-        'hasPerformanceData': performanceJson,
+        'sessionAdd': sessionAdd,
+        'sessionSubs': sessionSubs,
         'score': score,
         'winRate': winRate,
-        'session': session,
         'stars': stars,
       };
 
   Map<String, dynamic> get updateJson => {
         'score': score,
         'winRate': winRate,
-        'hasPerformanceData': performanceJson,
-        'session': session,
+        'sessionAdd': sessionAdd,
+        'sessionSubs': sessionSubs,
         'stars': stars,
         'record': registries
       };
@@ -63,8 +87,8 @@ class MOUser {
       schoolType: map['schoolType'],
       gender: map['gender'],
       grade: map['grade'],
-      performanceJson: map['hasPerformanceData'],
-      session: map['session'],
+      sessionAdd: map['sessionAdd'],
+      sessionSubs: map['sessionSubs'],
       score: map['score'].toDouble(),
       winRate: map['winRate'].toDouble(),
       stars: map['stars'],

@@ -19,16 +19,16 @@ enum OperationType {
   addition,
   subtraction,
   multiplication,
-  division,
 }
-enum AuthScreen{
+enum AuthScreen {
   login,
   recover,
 }
 
-enum MainScreen{
+enum MainScreen {
   home,
   ranking,
   about,
+  options,
   loading,
 }

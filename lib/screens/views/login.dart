@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mate_op/animations/astronaut/astronaut.dart';
+import 'package:mate_op/animations/planets/green.dart';
+import 'package:mate_op/animations/planets/yellow.dart';
 import 'package:mate_op/animations/rockets/rocket_a.dart';
 import 'package:mate_op/backend/firebase/authentication.dart';
 import 'package:mate_op/backend/firebase/data.dart';
@@ -42,14 +44,32 @@ class _WidgetState extends State<Login> {
     return SafeArea(
       child: Stack(
         children: <Widget>[
+          GreenPlanetAnim(
+              type: AnimType.standalone,
+              screenSize: screenSize,
+              duration: Duration(seconds: 3),
+              size: Size(90, 90),
+              margin: Size(30, 40),
+              angle: 10,
+              positionOffset: Size(-3, 5),
+              alignment: AnimAlignment.topRight),
+          YellowPlanetAnim(
+              type: AnimType.standalone,
+              screenSize: screenSize,
+              duration: Duration(seconds: 3),
+              size: Size(120, 148),
+              margin: Size(120, 10),
+              angle: -45,
+              positionOffset: Size(5, -3),
+              alignment: AnimAlignment.topLeft),
           RocketAAnim(
               screenSize: screenSize,
               duration: Duration(seconds: 2),
-              size: Size(50, 162),
-              margin: Size(32, 55),
+              size: Size(60, 194),
+              margin: Size(60, 25),
               angle: -35,
               positionOffset: Size(8, 8),
-              alignment: AnimAlignment.topRight),
+              alignment: AnimAlignment.bottomRight),
           AstronautAnim(
             screenSize: screenSize,
             size: Size(212.0, 150.0),
@@ -171,10 +191,9 @@ class _WidgetState extends State<Login> {
                             child: Image.asset("$imagesUri/login_button.png"),
                             onTap: () {
                               if (formKey.currentState.validate()) {
-                                signIn(email.text, password.text)
-                                    .then((user) {
-                                      Navigator.of(context).pop(user);
-                                    });
+                                signIn(email.text, password.text).then((user) {
+                                  Navigator.of(context).pop(user);
+                                });
                               }
                             },
                           ),
@@ -195,20 +214,6 @@ class _WidgetState extends State<Login> {
                   ),
                 ),
               ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, left: 24.0),
-              child: Image.asset("$imagesUri/cup_icon.png"),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 16.0, right: 24.0),
-              child: Image.asset("$imagesUri/cog_icon.png"),
             ),
           ),
         ],

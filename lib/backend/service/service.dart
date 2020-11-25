@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:mate_op/backend/local/data.dart';
+import 'package:mate_op/constants/enums.dart';
 import 'package:mate_op/models/intensities.dart';
 import 'package:mate_op/models/performance_vectors.dart';
 import 'package:mate_op/models/user.dart';
@@ -9,13 +10,15 @@ import 'package:http/http.dart' as http;
 const String baseUrl = 'mateop.herokuapp.com';
 
 // Calculate next intensity level with the bayesian model
-Future<Intensity> getNextIntensityLevel(Map map) async {
+Future<Intensity> getNextIntensityLevel(
+    Map map, OperationType operation, String token) async {
   map = PerformanceVectors.firebaseToJson(map);
   var uri = Uri.https(baseUrl, '/model/nextIntensity');
   final response = await http.post(
     uri,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: "Bearer " + token,
     },
     body: json.encode(map),
   );
@@ -41,7 +44,8 @@ Future<Intensity> getNextIntensityLevel(Map map) async {
     currentPerformanceVectors
         .setMulPerPerformanceVectors(updatedPerformance['mulPer']);
     currentPerformanceVectors.setIntensities(intensity.toJson);
-    await currentPerformanceVectors.writeObjectInFile(await localPath);
+    currentPerformanceVectors.writeObjectInFile(
+        await localPath, operation);
     return intensity;
   } else {
     throw Exception('Error on request');
@@ -49,12 +53,13 @@ Future<Intensity> getNextIntensityLevel(Map map) async {
 }
 
 // Calculate initial intensity level with the bayesian model using user metadata
-Future<Intensity> predictInicitalIntensity(MOUser user) async {
+Future<Intensity> predictInicitalIntensity(MOUser user, String token) async {
   var uri = Uri.https(baseUrl, '/model/predict');
   final response = await http.post(
     uri,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: "Bearer " + token,
     },
     body: json.encode(user.toJsonPrediction()),
   );
@@ -66,15 +71,16 @@ Future<Intensity> predictInicitalIntensity(MOUser user) async {
   }
 }
 
-Future<List> getLeaderboard(String score) async {
+Future<List> getLeaderboard(MOUser user) async {
   var queryParameters = {
-    'score': score,
+    'score': user.score.toString(),
   };
   var uri = Uri.https(baseUrl, '/data/leaderboard', queryParameters);
   final response = await http.get(
     uri,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: "Bearer " + user.token,
     },
   );
   if (response.statusCode == 200) {

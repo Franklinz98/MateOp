@@ -109,10 +109,8 @@ class MateOpRanking extends StatelessWidget {
 
   FutureBuilder getScoreboard(BuildContext context) {
     return FutureBuilder<List>(
-      future: getLeaderboard(Provider.of<MateOpState>(context, listen: false)
-          .user
-          .score
-          .toString()),
+      future:
+          getLeaderboard(Provider.of<MateOpState>(context, listen: false).user),
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {

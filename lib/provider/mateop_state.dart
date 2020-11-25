@@ -8,12 +8,18 @@ class MateOpState extends ChangeNotifier {
   ExerciseManager _exerciseManager;
   String _dataPath;
   MainScreen _mainScreen = MainScreen.home;
+  OperationType _operationType;
 
   String get localPath => _dataPath;
   MOUser get user => _user;
   String get userId => _user.firebaseUser.uid;
   ExerciseManager get exerciseManager => _exerciseManager;
   MainScreen get mainScreen => _mainScreen;
+  OperationType get operation => _operationType;
+
+  void setOperation(OperationType operationType) {
+    _operationType = operationType;
+  }
 
   void setMainScreen(MainScreen screen) {
     _mainScreen = screen;

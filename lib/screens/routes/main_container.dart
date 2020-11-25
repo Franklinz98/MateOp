@@ -2,13 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mate_op/backend/firebase/authentication.dart';
+import 'package:mate_op/backend/firebase/data.dart';
 import 'package:mate_op/backend/local/data.dart';
 import 'package:mate_op/constants/enums.dart';
 import 'package:mate_op/models/user.dart';
 import 'package:mate_op/provider/mateop_state.dart';
 import 'package:mate_op/screens/routes/playground.dart';
+import 'package:mate_op/screens/views/about.dart';
 import 'package:mate_op/screens/views/home.dart';
 import 'package:mate_op/screens/views/loading.dart';
+import 'package:mate_op/screens/views/options.dart';
 import 'package:mate_op/screens/views/ranking.dart';
 import 'package:mate_op/screens/views/results.dart';
 import 'package:provider/provider.dart';
@@ -82,9 +85,15 @@ class MainContainerState extends State<MainContainer> {
       case MainScreen.ranking:
         return MateOpRanking();
         break;
-      case MainScreen.about:
+      case MainScreen.options:
+        return OperationOptions(state: _provider);
         break;
-      default:
+      case MainScreen.about:
+        return AboutMateOp(
+          state: _provider,
+        );
+        break;
+      case MainScreen.loading:
         return LoadingScreen(
           state: _provider,
           openPlayground: () {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'exercise.dart';
 
@@ -21,7 +20,7 @@ class ExerciseManager {
   }
 
   bool isTestFinished() {
-    return currentExercise == allExercises.length;
+    return currentExercise == allExercises.length-1;
   }
 
   Exercise getCurrentExercise() {
@@ -82,14 +81,14 @@ class ExerciseManager {
   int _getSessionScore() {
     double score = 0;
     allExercises.forEach((exercise) {
-      double exScore = exerciseScore(exercise);
+      double exScore = _exerciseScore(exercise);
       score += exScore;
     });
     score *= 100;
     return score.round();
   }
 
-  double exerciseScore(Exercise exercise) {
+  double _exerciseScore(Exercise exercise) {
     if (exercise.checkAnswer()) {
       double time = exercise.duration.inSeconds.toDouble();
       if (exercise.dificulty == 0) {
@@ -110,7 +109,7 @@ class ExerciseManager {
     double av = 0;
     int cont = 0;
     allExercises.forEach((exercise) {
-      if (exercise.loID == lo) {
+      if (exercise.learningObj == lo) {
         av += exercise.duration.inSeconds.toDouble();
         cont++;
       }

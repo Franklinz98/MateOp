@@ -18,12 +18,14 @@ Future<MOUser> signIn(email, password) async {
   }
   MOUser user = MOUser.fromJson(await getUserMetadata(userCredential.user.uid));
   user.firebaseUser = userCredential.user;
+  user.token = await user.firebaseUser.getIdToken(true);
   return user;
 }
 
 Future<MOUser> getUserObject(User firebaseUser) async {
   MOUser user = MOUser.fromJson(await getUserMetadata(firebaseUser.uid));
   user.firebaseUser = firebaseUser;
+  user.token = await firebaseUser.getIdToken(true);
   return user;
 }
 

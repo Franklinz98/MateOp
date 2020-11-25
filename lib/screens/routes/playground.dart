@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mate_op/components/timer_bar.dart';
 import 'package:mate_op/engine/exercise_generator.dart';
 import 'package:mate_op/engine/score_controller.dart';
 import 'package:mate_op/models/exercise.dart';
 import 'package:mate_op/provider/mateop_state.dart';
 import 'package:mate_op/screens/views/game_zone.dart';
-import 'package:mate_op/screens/views/ranking.dart';
 import 'package:mate_op/screens/views/results.dart';
 import 'package:provider/provider.dart';
 
@@ -56,15 +54,16 @@ class _PlayGroundState extends State<PlayGround> {
     state.exerciseManager.finalTime += duration;
     exercise.hesitations = hesitations;
     if (exercise.playerAnswer != exercise.answer) {
-      writeOnFIleWrongExercise(exercise, state.localPath);
+      saveWrongExercisesOnFile(exercise, state.localPath);
     }
-    state.exerciseManager.nextExercise();
     if (state.exerciseManager.isTestFinished()) {
-      state.user.session++;
+      state.user.increaseSession(state.operation);
       updateFileWithVectorPerformace(state);
       setState(() {
         _content = SessionResults(results: state.exerciseManager.getResults());
       });
+    } else {
+      state.exerciseManager.nextExercise();
     }
   }
 }

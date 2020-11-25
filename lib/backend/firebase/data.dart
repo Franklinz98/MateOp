@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mate_op/constants/enums.dart';
 import 'package:mate_op/models/user.dart';
+import 'package:path/path.dart' as p;
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -27,13 +29,14 @@ Future<bool> updateUserMetadata(MOUser user) async {
 }
 
 // Fetch performance data saved on database
-Future<Map> getPerformanceData(MOUser user) async {
+Future<Map> getPerformanceData(MOUser user, OperationType operation) async {
   try {
     DocumentSnapshot documentSnapshot = await _firestore
         .collection('data')
         .doc('performance')
         .collection(user.firebaseUser.uid)
-        .doc('session${user.session}')
+        .doc(
+            'session${user.getSession(operation)}_${p.extension(operation.toString()).replaceAll('.', '')}')
         .get();
     return documentSnapshot.data();
   } on Exception catch (e) {
@@ -43,16 +46,32 @@ Future<Map> getPerformanceData(MOUser user) async {
 
 // Post performance data
 Future<void> updatePerformanceData(
-    MOUser user, Map performanceVectorsData) async {
+    MOUser user, OperationType operation, Map performanceVectorsData) async {
   try {
     DocumentReference performanceRef = _firestore
         .collection('data')
         .doc('performance')
         .collection(user.firebaseUser.uid)
-        .doc('session${user.session}');
+        .doc(
+            'session${user.getSession(operation)}_${p.extension(operation.toString()).replaceAll('.', '')}');
     performanceRef.set(performanceVectorsData);
   } catch (e) {
     print(e.toString());
+  }
+}
+
+Future<bool> checkPerformanceData(MOUser user, OperationType operation) async {
+  try {
+    DocumentSnapshot performanceSnapshot = await _firestore
+        .collection('data')
+        .doc('performance')
+        .collection(user.firebaseUser.uid)
+        .doc(
+            'session${user.getSession(operation)}_${p.extension(operation.toString()).replaceAll('.', '')}')
+        .get();
+    return performanceSnapshot.exists;
+  } catch (e) {
+    return false;
   }
 }
 
@@ -65,11 +84,9 @@ Future<bool> setTimes() {
     '5': 0,
   };
   List<Map> los = [];
-  los.add(map);
-  los.add(map);
-  los.add(map);
-  los.add(map);
-  los.add(map);
+  for (var i = 0; i < 15; i++) {
+    los.add(map);
+  }
   _firestore
       .collection('time_data')
       .doc('0')

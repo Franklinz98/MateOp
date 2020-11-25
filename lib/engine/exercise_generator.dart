@@ -10,8 +10,8 @@ import '../models/intensities.dart';
 import 'dart:io' as io;
 
 Random _random = Random();
-List<Exercise> generateExercisesFromLOPerformance(
-    Intensity myPerformance, int numberOfExercises, String path) {
+List<Exercise> generateExercisesFromPerformance(Intensity myPerformance,
+    int numberOfExercises, String path, OperationType operationType) {
   List<Exercise> myExercises = List<Exercise>();
 
   int chosenLO = 0;
@@ -53,13 +53,13 @@ List<Exercise> generateExercisesFromLOPerformance(
       }
     }
 
-    List<Exercise> myExerciseslo = _generateExercisesPerLO(
-        numberOfDF, "LOIN$i", 0, OperationType.addition, path, myExercises);
+    List<Exercise> myExerciseslo = _generateExercisePerLearningObj(
+        numberOfDF, i, 0, operationType, path, myExercises);
     for (Exercise ex in myExerciseslo) {
       myExercises.add(ex);
     }
-    myExerciseslo = _generateExercisesPerLO(
-        numberOfDD, "LOIN$i", 1, OperationType.addition, path, myExercises);
+    myExerciseslo = _generateExercisePerLearningObj(
+        numberOfDD, i, 1, operationType, path, myExercises);
     for (Exercise ex in myExerciseslo) {
       myExercises.add(ex);
     }
@@ -85,9 +85,9 @@ bool _canBeAddedToList(List<int> list, int newNum, int comparator) {
   return true;
 }
 
-List<Exercise> _generateExercisesPerLO(
+List<Exercise> _generateExercisePerLearningObj(
     int numberExerc,
-    String loIDString,
+    int learningObjective,
     int dificulty,
     OperationType opType,
     String path,
@@ -95,115 +95,262 @@ List<Exercise> _generateExercisesPerLO(
   List<Exercise> myExercises = List<Exercise>();
   List<int> choosenNumbersSum1 = List<int>();
   List<int> choosenNumbersSum2 = List<int>();
+  int lO = learningObjective;
+  switch (opType) {
+    case OperationType.addition:
+      lO += 0;
+      break;
+    case OperationType.subtraction:
+      lO += 9;
+      break;
+    case OperationType.multiplication:
+      break;
+  }
   myExercises =
-      _getPastExercisesFromFile(numberExerc, loIDString, dificulty, path);
+      _getPastExercisesFromFile(numberExerc, 'LOIN$lO', dificulty, path);
   numberExerc = numberExerc - myExercises.length;
+  int diff = dificulty;
   for (var i = 0; i < numberExerc; i++) {
-    int loId = 0;
-    int sumOp1 = 0, sumOp2 = 0;
-    if (loIDString == "LOIN0") {
-      loId = 0;
-      if (dificulty == 1) {
+    int operator1 = 0, operator2 = 0;
+    switch (lO) {
+      case 0:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(9) + 1;
+            operator2 = _random.nextInt(9) + 1;
+          } while (operator1 + operator2 < 10 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 3) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 3) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(8) + 1;
+            operator2 = _random.nextInt(9 - operator1) + 1;
+          } while ((operator1 + operator2) >= 10 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 3) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 3) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 1:
+        operator2 = 10;
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(5) + 5;
+          } while ((operator1 + operator2) <= 15 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2));
+        } else {
+          do {
+            operator1 = _random.nextInt(5) + 1;
+          } while ((operator1 + operator2) > 15 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2));
+        }
+        break;
+      case 2:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(9) + 1;
+            operator2 = _random.nextInt(89) + 10;
+          } while (operator1 + operator2 >= 100 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(89) + 10;
+            operator2 = _random.nextInt(9) + 1;
+          } while (operator1 + operator2 >= 100 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 3:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(9) + 1;
+            operator2 = _random.nextInt(9) + 91;
+          } while (operator1 + operator2 < 100 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(9) + 91;
+            operator2 = _random.nextInt(9) + 1;
+          } while (operator1 + operator2 < 100 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 4:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(90) + 10;
+            operator2 = _random.nextInt(90) + 10;
+          } while (operator1 + operator2 < 100 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(80) + 10;
+            operator2 = _random.nextInt(90 - operator1) + 10;
+          } while (operator1 + operator2 >= 100 ||
+              !_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 9:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(9) + 1;
+            operator1 = operator1.isOdd ? operator1 : operator1 - 1;
+            operator2 = _random.nextInt(9) + 1;
+            operator2 = operator2.isOdd ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 4) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 4) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(7) + 2;
+            operator1 = operator1.isEven ? operator1 : operator1 - 1;
+            operator2 = _random.nextInt(7) + 2;
+            operator2 = operator2.isEven ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 4) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 4) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 10:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(9) + 1;
+            operator1 = operator1.isOdd ? operator1 : operator1 - 1;
+            operator2 = _random.nextInt(7) + 2;
+            operator2 = operator2.isEven ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(7) + 2;
+            operator1 = operator1.isEven ? operator1 : operator1 - 1;
+            operator2 = _random.nextInt(9) + 1;
+            operator2 = operator2.isOdd ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 11:
+        operator1 = 10;
+        int attemps = 0;
+        if (diff == 1) {
+          do {
+            operator2 = _random.nextInt(9) + 1;
+            if (i >= (numberExerc ~/ 2) && attemps == 10) {
+              operator2 = operator2.isEven ? operator2 : operator2 - 1;
+              diff = 0;
+            } else {
+              operator2 = operator2.isOdd ? operator2 : operator2 - 1;
+              attemps++;
+            }
+            operator2 = operator2.isOdd ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator2 = _random.nextInt(7) + 2;
+            if (i >= (numberExerc ~/ 2) && attemps == 10) {
+              operator2 = operator2.isOdd ? operator2 : operator2 - 1;
+              diff = 1;
+            } else {
+              operator2 = operator2.isEven ? operator2 : operator2 - 1;
+              attemps++;
+            }
+          } while (!_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 12:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(90) + 10;
+            operator2 = _random.nextInt(7) + 2;
+            operator2 = operator2.isOdd ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(90) + 10;
+            operator2 = _random.nextInt(7) + 2;
+            operator2 = operator2.isEven ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
+      case 13:
+        operator2 = 10;
         do {
-          sumOp1 = _random.nextInt(9) + 1;
-          sumOp2 = _random.nextInt(9) + 1;
-        } while (sumOp1 + sumOp2 < 10 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      } else {
-        do {
-          sumOp1 = _random.nextInt(8) + 1;
-          sumOp2 = _random.nextInt(9-sumOp1) + 1;
-        } while ((sumOp1 + sumOp2) >= 10 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 3) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 3) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      }
-    } else if (loIDString == "LOIN1") {
-      loId = 1;
-      sumOp2 = 10;
-      if (dificulty == 1) {
-        do {
-          sumOp1 = _random.nextInt(5) + 5;
-        } while ((sumOp1 + sumOp2) <= 15 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2));
-      } else {
-        do {
-          sumOp1 = _random.nextInt(5) + 1;
-        } while ((sumOp1 + sumOp2) > 15 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2));
-      }
-    } else if (loIDString == "LOIN2") {
-      loId = 2;
-      if (dificulty == 1) {
-        do {
-          sumOp1 = _random.nextInt(9) + 1;
-          sumOp2 = _random.nextInt(89) + 10;
-        } while (sumOp1 + sumOp2 >= 100 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      } else {
-        do {
-          sumOp1 = _random.nextInt(89) + 10;
-          sumOp2 = _random.nextInt(9) + 1;
-        } while (sumOp1 + sumOp2 >= 100 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      }
-    } else if (loIDString == "LOIN3") {
-      loId = 3;
-      if (dificulty == 1) {
-        do {
-          sumOp1 = _random.nextInt(9) + 1;
-          sumOp2 = _random.nextInt(9) + 91;
-        } while (sumOp1 + sumOp2 < 100 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      } else {
-        do {
-          sumOp1 = _random.nextInt(9) + 91;
-          sumOp2 = _random.nextInt(9) + 1;
-        } while (sumOp1 + sumOp2 < 100 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      }
-    } else {
-      loId = 4;
-      if (dificulty == 1) {
-        do {
-          sumOp1 = _random.nextInt(90) + 10;
-          sumOp2 = _random.nextInt(90) + 10;
-        } while (sumOp1 + sumOp2 < 100 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      } else {
-        do {
-          sumOp1 = _random.nextInt(80) + 10;
-          sumOp2 = _random.nextInt(90-sumOp1) + 10;
-        } while (sumOp1 + sumOp2 >= 100 ||
-            !_canBeAddedToList(choosenNumbersSum1, sumOp1, 2) ||
-            !_canBeAddedToList(choosenNumbersSum2, sumOp2, 2) ||
-            !_canExerciseBeAdded(myExercises, currentList, sumOp1, sumOp2));
-      }
+          operator1 = _random.nextInt(90) + 10;
+        } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+            !_exerciseAlreadyExits(
+                myExercises, currentList, operator1, operator2));
+        break;
+      case 14:
+        if (diff == 1) {
+          do {
+            operator1 = _random.nextInt(90) + 10;
+            operator2 = _random.nextInt(89) + 11;
+            operator2 = operator2.isEven ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        } else {
+          do {
+            operator1 = _random.nextInt(90) + 10;
+            operator2 = _random.nextInt(89) + 10;
+            operator2 = operator2.isEven ? operator2 : operator2 - 1;
+          } while (!_canBeAddedToList(choosenNumbersSum1, operator1, 2) ||
+              !_canBeAddedToList(choosenNumbersSum2, operator2, 2) ||
+              !_exerciseAlreadyExits(
+                  myExercises, currentList, operator1, operator2));
+        }
+        break;
     }
-    choosenNumbersSum1.add(sumOp1);
-    choosenNumbersSum2.add(sumOp2);
-    int type = 0;
+    choosenNumbersSum1.add(operator1);
+    choosenNumbersSum2.add(operator2);
     Exercise oneExc = Exercise(
-      loID: loId,
-      firstOperator: sumOp1.toDouble(),
-      secondOperator: sumOp2.toDouble(),
-      answer: calculateAnswer(sumOp1.toDouble(), sumOp2.toDouble(), opType),
+      learningObj: lO,
+      firstOperator: operator1.toDouble(),
+      secondOperator: operator2.toDouble(),
+      answer:
+          calculateAnswer(operator1.toDouble(), operator2.toDouble(), opType),
       operation: opType,
     );
-    oneExc.dificulty = dificulty;
-    print('${oneExc.firstOperator} + ${oneExc.secondOperator}');
+    oneExc.dificulty = diff;
     myExercises.add(oneExc);
   }
   return myExercises;
@@ -239,12 +386,12 @@ List<Exercise> _getPastExercisesFromFile(
   return myExercises;
 }
 
-void writeOnFIleWrongExercise(Exercise myWrongExercise, String path) {
+void saveWrongExercisesOnFile(Exercise myWrongExercise, String path) {
   String filename = "WrongExercises";
   io.File file = getLocalFile(path, filename);
   int dificulty = myWrongExercise.dificulty;
-  SavedExercise savedExercise =
-      SavedExercise("LOIN${myWrongExercise.loID}", dificulty, myWrongExercise);
+  SavedExercise savedExercise = SavedExercise(
+      "LOIN${myWrongExercise.learningObj}", dificulty, myWrongExercise);
   try {
     List savedExercises = [];
     if (file.existsSync()) {
@@ -258,7 +405,7 @@ void writeOnFIleWrongExercise(Exercise myWrongExercise, String path) {
   }
 }
 
-bool _canExerciseBeAdded(
+bool _exerciseAlreadyExits(
     List<Exercise> currents, List<Exercise> currentList, int a, int b) {
   for (Exercise exercise in currents) {
     if (exercise.firstOperator == a && exercise.secondOperator == b) {
@@ -273,26 +420,21 @@ bool _canExerciseBeAdded(
   return true;
 }
 
-double getTotalPerformance(Intensity myperformance) {
-  double result = 0;
-  for (var i = 0; i < myperformance.getNumberOfLo(); i++) {
-    result = result + myperformance.loIntensities["LOIN$i"];
-  }
-  return result;
-}
-
 double calculateAnswer(
     double firstOperator, double secondOperator, OperationType type) {
+  double answer;
   switch (type) {
     case OperationType.addition:
-      return firstOperator + secondOperator;
+      answer = firstOperator + secondOperator;
+      break;
     case OperationType.subtraction:
-      return firstOperator - secondOperator;
+      answer = firstOperator - secondOperator;
+      break;
     case OperationType.multiplication:
-      return firstOperator * secondOperator;
-    default:
-      return firstOperator / secondOperator;
+      answer = firstOperator * secondOperator;
+      break;
   }
+  return answer;
 }
 
 List<double> generateAnswerOptions(double answer) {

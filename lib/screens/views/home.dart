@@ -3,23 +3,13 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mate_op/animations/astronaut/astronaut.dart';
-import 'package:mate_op/animations/rockets/rocket_a.dart';
 import 'package:mate_op/backend/firebase/authentication.dart';
-import 'package:mate_op/backend/firebase/data.dart';
-import 'package:mate_op/backend/local/data.dart';
-import 'package:mate_op/backend/service/service.dart';
 import 'package:mate_op/constants/enums.dart';
-import 'package:mate_op/engine/exercise_generator.dart';
-import 'package:mate_op/engine/playground.dart';
-import 'package:mate_op/models/exercise_manager.dart';
-import 'package:mate_op/models/intensities.dart';
-import 'package:mate_op/models/performance_vectors.dart';
 import 'package:mate_op/models/user.dart';
 import 'package:mate_op/provider/mateop_state.dart';
 import 'package:mate_op/screens/routes/authentication.dart';
-import 'package:mate_op/screens/routes/playground.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatelessWidget {
   final String imagesUri = "assets/images";
@@ -29,7 +19,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
+    MateOpState _provider = Provider.of<MateOpState>(context, listen: false);
     return SafeArea(
       child: Stack(
         children: <Widget>[
@@ -90,7 +80,7 @@ class Home extends StatelessWidget {
                       );
                       state.setUser(user);
                     }
-                    state.setMainScreenLoud(MainScreen.loading);
+                    state.setMainScreenLoud(MainScreen.options);
                   },
                 ),
                 Text(
@@ -101,16 +91,19 @@ class Home extends StatelessWidget {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: GestureDetector(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16.0, left: 24.0),
-                child: Image.asset("$imagesUri/cup_icon.png"),
+          Visibility(
+            visible: _provider.user != null,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: GestureDetector(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16.0, left: 24.0),
+                  child: Image.asset("$imagesUri/cup_icon.png"),
+                ),
+                onTap: () {
+                  this.state.setMainScreenLoud(MainScreen.ranking);
+                },
               ),
-              onTap: () {
-                this.state.setMainScreenLoud(MainScreen.ranking);
-              },
             ),
           ),
           Align(
@@ -121,8 +114,37 @@ class Home extends StatelessWidget {
                 child: Image.asset("$imagesUri/cog_icon.png"),
               ),
               onTap: () {
-                // setTimes();
-                signOut().then((value) => this.state.setUser(null));
+                this.state.setMainScreenLoud(MainScreen.about);
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16.0, left: 24.0),
+                child: GestureDetector(
+                  child: Text(
+                    "Graphics by Freepik.com",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.nunito(
+                      fontSize: 15,
+                      color: Colors.white.withOpacity(0.5),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onTap: () async {
+                    if (await canLaunch('https://Freepik.com')) {
+                      await launch('https://Freepik.com');
+                    } else {
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('Visita Freepik.com!')));
+                    }
+                  },
+                ),
+              ),
+              onTap: () {
+                this.state.setMainScreenLoud(MainScreen.about);
               },
             ),
           ),

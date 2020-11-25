@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,7 +11,6 @@ import 'package:mate_op/constants/enums.dart';
 import 'package:mate_op/engine/exercise_generator.dart';
 import 'package:mate_op/models/exercise.dart';
 import 'package:mate_op/provider/mateop_state.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 class GameZone extends StatefulWidget {
   final Function nextExercise;
@@ -42,12 +40,12 @@ class _GameZoneState extends State<GameZone> {
     timerBar = TimerBar(durationUpdate: (Duration increment) {
       duration += increment;
     });
+    showExercise();
   }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    showExercise();
     return SafeArea(
       child: Stack(
         children: [
@@ -113,7 +111,9 @@ class _GameZoneState extends State<GameZone> {
             duration: Duration(seconds: 2),
             type: AnimType.parent,
             child: Text(
-              "?",
+              playerAnswer.abs() != double.minPositive
+                  ? playerAnswer.toInt().toString()
+                  : '?',
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
                 fontSize: 38,
@@ -146,7 +146,7 @@ class _GameZoneState extends State<GameZone> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "+",
+                        operatorSymbol(widget.state.operation),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.nunito(
                           fontWeight: FontWeight.w700,
@@ -292,6 +292,7 @@ class _GameZoneState extends State<GameZone> {
                     playerAnswer = double.minPositive;
                     duration = Duration();
                     timerBar.startTicker();
+                    showExercise();
                   });
                 }
               },
@@ -309,10 +310,9 @@ class _GameZoneState extends State<GameZone> {
 
   void showExercise() {
     exercise = widget.state.exerciseManager.getCurrentExercise();
-    print('Exercise: ${widget.state.exerciseManager.currentExercise}');
     exercise.answerOptions = generateAnswerOptions(exercise.answer);
     writeSessionFile(widget.state.localPath, widget.state.exerciseManager,
-        widget.state.userId);
+        widget.state.operation, widget.state.userId);
     firstOp = exercise.firstOpInt;
     secondOp = exercise.secondOpInt;
     op1 = exercise.answerOptions[0];
@@ -322,10 +322,28 @@ class _GameZoneState extends State<GameZone> {
 
   void selectOption(double value) {
     if (playerAnswer != value) {
-      playerAnswer = value;
-      hesitation++;
+      setState(() {
+        playerAnswer = value;
+        hesitation++;
+      });
       print(playerAnswer);
       print(hesitation);
     }
+  }
+
+  String operatorSymbol(OperationType operation) {
+    String op = '';
+    switch (operation) {
+      case OperationType.addition:
+        op = '+';
+        break;
+      case OperationType.subtraction:
+        op = '-';
+        break;
+      case OperationType.multiplication:
+        op = 'x';
+        break;
+    }
+    return op;
   }
 }
